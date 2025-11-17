@@ -8,7 +8,17 @@ You are helping the user install Voice-to-Claude-CLI, a local voice transcriptio
 
 **1. Run the automated installer:**
 ```bash
-cd "$CLAUDE_PLUGIN_ROOT" && INTERACTIVE=false bash scripts/install.sh
+if [ -f "$CLAUDE_PLUGIN_ROOT/scripts/install.sh" ]; then
+  cd "$CLAUDE_PLUGIN_ROOT" && INTERACTIVE=false bash scripts/install.sh
+elif [ -f "scripts/install.sh" ]; then
+  INTERACTIVE=false bash scripts/install.sh
+else
+  echo "ERROR: Cannot find install.sh script!"
+  echo "CLAUDE_PLUGIN_ROOT: $CLAUDE_PLUGIN_ROOT"
+  echo "Current directory: $(pwd)"
+  ls -la "$CLAUDE_PLUGIN_ROOT" 2>/dev/null || echo "CLAUDE_PLUGIN_ROOT not accessible"
+  exit 1
+fi
 ```
 
 This script will automatically:
