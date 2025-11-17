@@ -1,13 +1,13 @@
 # Handover - Voice-to-Claude-CLI Local Transcription
 
-**Last Updated:** 2025-11-17 (Session 16)
-**Session Focus:** Project Renaming - voicetocli → Voice-to-Claude-CLI
+**Last Updated:** 2025-11-17 (Session 17)
+**Session Focus:** GitHub Publication - Repository Preparation and Push
 
 ---
 
 ## Quick Reference - Current State
 
-**Status:** ✅ **Production Ready - Renamed to Voice-to-Claude-CLI**
+**Status:** ✅ **LIVE ON GITHUB - Published at github.com/aldervall/Voice-to-Claude-CLI**
 
 **What Works:**
 - ✅ Cross-platform support (Arch, Ubuntu, Fedora, OpenSUSE)
@@ -25,11 +25,13 @@
 
 **Installation:**
 
-**Via Claude Code Plugin (Easiest):**
+**Via Claude Code Plugin (NOW LIVE!):**
 ```bash
-/plugin add aldervall/Voice-to-Claude-CLI  # Add plugin from GitHub
-/voice-install                        # Run installation wizard
+/plugin add aldervall/Voice-to-Claude-CLI  # Install from GitHub
+/voice-install                             # Run installation wizard
 ```
+
+**Repository:** https://github.com/aldervall/Voice-to-Claude-CLI
 
 **Via Standalone:**
 ```bash
@@ -63,7 +65,186 @@ voice-to-claude-cli/
 
 ---
 
-## What Was Accomplished This Session (2025-11-17 Session 16)
+## What Was Accomplished This Session (2025-11-17 Session 17)
+
+### 🎯 Mission: Publish to GitHub
+
+**Goal:** Prepare the project for public GitHub publication, clean up all placeholders and duplicates, and push to the live repository at `github.com/aldervall/Voice-to-Claude-CLI`.
+
+### 1. Pre-Publication Analysis ✅
+
+**Used Plan Agent to comprehensively audit the repository:**
+- Scanned 27+ files across entire project structure
+- Identified critical issues, high priority fixes, and nice-to-haves
+- Created detailed action checklist with priorities
+- Verified .gitignore coverage for large files
+
+**Critical Issues Found:**
+- Not a git repository (needed `git init`)
+- Duplicate directories: `commands/`, `skills/`, `__pycache__/`
+- Duplicate CLAUDE.md files (root vs docs/)
+- Placeholder "yourusername" in 3 files
+- Placeholder email in plugin.json
+- Missing LICENSE file
+- Missing ARM64 binary (docs claimed support)
+- .claude/settings.local.json not gitignored
+
+### 2. Repository Cleanup ✅
+
+**Deleted Duplicates:**
+```bash
+rm -rf commands/ skills/ __pycache__/
+```
+- Removed duplicate directories created during plugin development
+- Kept only `.claude/commands/` and `.claude/skills/` (canonical versions)
+- Removed Python bytecode cache
+
+**Resolved CLAUDE.md Duplication:**
+- Deleted root `CLAUDE.md` (16K version)
+- Kept `docs/CLAUDE.md` (14K, more concise)
+- Created symlink: `CLAUDE.md -> docs/CLAUDE.md` (like README.md)
+- Both symlinks now tracked properly in git
+
+### 3. Updated Placeholders and Metadata ✅
+
+**GitHub Information:**
+- Repository URL: `https://github.com/aldervall/Voice-to-Claude-CLI`
+- Owner: `aldervall`
+- Author: Niklas Aldervall
+- Contact: niklas@aldervall.se
+
+**Files Updated:**
+1. `.claude-plugin/plugin.json`
+   - Author name: "Niklas Aldervall"
+   - Email: "niklas@aldervall.se"
+   - Homepage: `https://github.com/aldervall/Voice-to-Claude-CLI`
+   - Repository URL: Updated to correct repo
+
+2. `docs/README.md`
+   - All `/plugin add yourusername/voice-to-claude-cli` → `aldervall/Voice-to-Claude-CLI`
+   - Added prominent quick install section at top of README
+   - ARM64 status clarified: "x64 included; ARM64 planned - TODO"
+
+3. `docs/HANDOVER.md`
+   - All repository references updated
+   - Plugin commands updated
+
+4. `docs/CLAUDE.md`
+   - Binary paths updated to reflect x64-only status
+   - ARM64 noted as "planned" in 3 locations
+
+### 4. Added Required Files ✅
+
+**Created LICENSE File:**
+```
+MIT License
+Copyright (c) 2025 Niklas Aldervall
+```
+- Standard MIT license text
+- Matches license declared in plugin.json
+
+**Enhanced .gitignore:**
+```gitignore
+# Claude Code local settings
+.claude/settings.local.json
+.claude/*.local.*
+```
+- Protects local Claude Code settings from being committed
+- Prevents accidental commit of API keys or local configs
+
+### 5. Git Repository Initialization ✅
+
+**Initialized Repository:**
+```bash
+git init
+git branch -m main  # Renamed master → main
+```
+
+**Staged Files (28 files, ~1.5MB total):**
+- Source code: `src/` (4 Python files)
+- Scripts: `scripts/` (2 installers)
+- Config: `config/`, `requirements.txt`, `.gitignore`
+- Docs: `docs/` (3 files), `README.md`, `CLAUDE.md`, `LICENSE`
+- Claude integration: `.claude/` (skills, commands)
+- Whisper.cpp: `.whisper/` (binary, scripts, README)
+- Plugin metadata: `.claude-plugin/plugin.json`
+
+**Verified Exclusions (Working!):**
+- ✅ `venv/` (7.1GB) - gitignored
+- ✅ `.whisper/models/` (142MB ggml-base.en.bin) - gitignored
+- ✅ `.claude/settings.local.json` - gitignored (new)
+- ✅ `__pycache__/` - gitignored
+
+**Files Intentionally Included:**
+- `.whisper/bin/whisper-server-linux-x64` (1.3MB) - Pre-built binary
+- This is intentional per project design (fast installation)
+
+### 6. Initial Commits Created ✅
+
+**Commit 1 (d294798):**
+```
+Initial commit: Voice-to-Claude-CLI local voice transcription tool
+
+Cross-platform local voice transcription using whisper.cpp
+- 100% local processing, no API keys required
+- Supports Arch, Ubuntu, Fedora, OpenSUSE
+- Wayland and X11 compatible
+- Three modes: daemon, one-shot, interactive
+- Claude Code Skill integration with auto-start
+- Pre-built x64 whisper.cpp binary included
+```
+
+**Commit 2 (9bb236a):**
+```
+Add quick install instructions to README
+```
+- Added prominent quick install section at top
+- Shows `/plugin add aldervall/Voice-to-Claude-CLI` command
+- User-requested addition
+
+### 7. Published to GitHub ✅
+
+**Push Process:**
+```bash
+git remote add origin https://github.com/aldervall/Voice-to-Claude-CLI.git
+git push -u origin main --force  # Force push (replaced placeholder repo)
+```
+
+**Result:**
+- ✅ Successfully pushed to `github.com/aldervall/Voice-to-Claude-CLI`
+- ✅ Repository is now publicly accessible
+- ✅ Users can install via: `/plugin add aldervall/Voice-to-Claude-CLI`
+- ✅ Total repo size: ~1.5MB (very reasonable)
+
+**Replaced Placeholder:**
+- User had created empty placeholder repo with README
+- Force push replaced it with complete project
+- No merge conflicts, clean history
+
+### 8. ARM64 Documentation Updates ✅
+
+**Reality Check Performed:**
+- Checked `.whisper/bin/` directory
+- Found: `whisper-server-linux-x64` (1.3MB) ✓
+- Missing: `whisper-server-linux-arm64` ✗
+
+**Updated Documentation (3 files):**
+1. `docs/README.md`:
+   - "Pre-built x64 binary included, no compilation needed"
+   - "(x64 included; ARM64 planned - TODO)"
+
+2. `docs/CLAUDE.md`:
+   - "Pre-built x64 binary (ARM64 planned)"
+   - Updated 3 locations with accurate status
+
+**Decision:** Keep ARM64 as "planned/TODO" rather than removing mention entirely. This:
+- Sets accurate expectations for current users
+- Signals future direction for the project
+- Doesn't over-promise support that doesn't exist yet
+
+---
+
+## Session 16 Archive (2025-11-17)
 
 ### 🎯 Mission: Rename Project to Voice-to-Claude-CLI
 
