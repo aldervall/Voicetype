@@ -27,12 +27,17 @@ RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
+CYAN='\033[0;36m'
+MAGENTA='\033[0;35m'
+BOLD='\033[1m'
 NC='\033[0m' # No Color
 
 echo_info() { echo -e "${BLUE}ℹ${NC} $1"; }
 echo_success() { echo -e "${GREEN}✓${NC} $1"; }
 echo_warning() { echo -e "${YELLOW}⚠${NC} $1"; }
 echo_error() { echo -e "${RED}✗${NC} $1"; }
+echo_step() { echo -e "${CYAN}${BOLD}▶${NC} ${BOLD}$1${NC}"; }
+echo_header() { echo -e "${MAGENTA}${BOLD}$1${NC}"; }
 
 # Detect if running non-interactively (from Claude Code or CI)
 if [ -t 0 ]; then
@@ -69,9 +74,18 @@ if [ "$EUID" -eq 0 ]; then
     exit 1
 fi
 
-echo "========================================"
-echo "Voice-to-Claude-CLI Universal Installer"
-echo "========================================"
+clear
+echo -e "${CYAN}${BOLD}"
+cat << "EOF"
+╔═══════════════════════════════════════════════════════╗
+║                                                       ║
+║     🎙️  VOICE-TO-CLAUDE-CLI INSTALLER 🚀            ║
+║                                                       ║
+║     Local Voice Transcription - 100% Private         ║
+║                                                       ║
+╚═══════════════════════════════════════════════════════╝
+EOF
+echo -e "${NC}"
 echo
 
 # Detect environment
@@ -145,11 +159,13 @@ case "$DISTRO" in
 esac
 
 # Install system dependencies
-echo "========================================"
-echo "Step 1/7: Install System Dependencies"
-echo "========================================"
 echo
-echo_info "Installing: $PACKAGES"
+echo_header "╔═══════════════════════════════════════════════════════╗"
+echo_header "║  📦 STEP 1/7: Install System Dependencies            ║"
+echo_header "╚═══════════════════════════════════════════════════════╝"
+echo
+echo_step "Installing packages: $PACKAGES"
+echo_info "This may require sudo password..."
 echo
 
 # Try to install packages with error handling
@@ -189,9 +205,10 @@ fi
 echo
 
 # Enable ydotool daemon (required for keyboard automation)
-echo "========================================"
-echo "Step 2/7: Enable ydotool Daemon"
-echo "========================================"
+echo
+echo_header "╔═══════════════════════════════════════════════════════╗"
+echo_header "║  ⌨️  STEP 2/7: Enable ydotool Daemon                 ║"
+echo_header "╚═══════════════════════════════════════════════════════╝"
 echo
 
 if systemctl --user is-enabled ydotool.service &>/dev/null; then
@@ -205,9 +222,10 @@ fi
 echo
 
 # Add user to input group (required for keyboard event monitoring)
-echo "========================================"
-echo "Step 3/7: Add User to 'input' Group"
-echo "========================================"
+echo
+echo_header "╔═══════════════════════════════════════════════════════╗"
+echo_header "║  👤 STEP 3/7: Add User to 'input' Group              ║"
+echo_header "╚═══════════════════════════════════════════════════════╝"
 echo
 
 if groups | grep -q '\binput\b'; then
@@ -223,9 +241,10 @@ fi
 echo
 
 # Install Python virtual environment and dependencies
-echo "========================================"
-echo "Step 4/7: Install Python Dependencies"
-echo "========================================"
+echo
+echo_header "╔═══════════════════════════════════════════════════════╗"
+echo_header "║  🐍 STEP 4/7: Install Python Dependencies            ║"
+echo_header "╚═══════════════════════════════════════════════════════╝"
 echo
 
 # Determine install location
@@ -262,9 +281,10 @@ echo_success "Python packages installed"
 echo
 
 # Create launcher scripts in ~/.local/bin
-echo "========================================"
-echo "Step 5/7: Create Launcher Scripts"
-echo "========================================"
+echo
+echo_header "╔═══════════════════════════════════════════════════════╗"
+echo_header "║  🚀 STEP 5/7: Create Launcher Scripts                ║"
+echo_header "╚═══════════════════════════════════════════════════════╝"
 echo
 
 mkdir -p "$BIN_DIR"
@@ -302,9 +322,10 @@ echo_success "Created: $BIN_DIR/voiceclaudecli-interactive"
 echo
 
 # Install systemd service
-echo "========================================"
-echo "Step 6/7: Install systemd Service"
-echo "========================================"
+echo
+echo_header "╔═══════════════════════════════════════════════════════╗"
+echo_header "║  ⚙️  STEP 6/7: Install systemd Service               ║"
+echo_header "╚═══════════════════════════════════════════════════════╝"
 echo
 
 SYSTEMD_USER_DIR="$HOME/.config/systemd/user"
@@ -335,13 +356,15 @@ echo_success "Systemd daemon reloaded"
 echo
 
 # Ask about whisper.cpp installation
-echo "========================================"
-echo "Step 7/7: whisper.cpp Server"
-echo "========================================"
+echo
+echo_header "╔═══════════════════════════════════════════════════════╗"
+echo_header "║  🎙️  STEP 7/7: whisper.cpp Server                    ║"
+echo_header "╚═══════════════════════════════════════════════════════╝"
 echo
 
-echo_info "Voice-to-Claude-CLI requires whisper.cpp server for transcription"
-echo_info "Model download: ~142 MB (one-time)"
+echo_step "Voice transcription engine setup"
+echo_info "Model download: ~142 MB (one-time, with progress bar)"
+echo_info "This is the magic behind local voice recognition! ✨"
 echo
 
 if command -v whisper-server &>/dev/null || [ -f "/tmp/whisper.cpp/build/bin/whisper-server" ]; then
@@ -373,17 +396,27 @@ fi
 echo
 
 # Final summary
-echo "========================================"
-echo "Installation Complete!"
-echo "========================================"
+echo
+echo
+echo -e "${GREEN}${BOLD}"
+cat << "EOF"
+╔═══════════════════════════════════════════════════════╗
+║                                                       ║
+║          ✨ INSTALLATION COMPLETE! ✨                ║
+║                                                       ║
+║     🎙️  Voice-to-Claude-CLI is ready to use! 🚀     ║
+║                                                       ║
+╚═══════════════════════════════════════════════════════╝
+EOF
+echo -e "${NC}"
 echo
 
 if [ -n "$NEEDS_LOGOUT" ]; then
-    echo_warning "IMPORTANT: You MUST log out and log back in for 'input' group to take effect!"
+    echo_warning "⚠️  IMPORTANT: You MUST log out and log back in for 'input' group to take effect!"
     echo
 fi
 
-echo_success "Voice-to-Claude-CLI installed successfully!"
+echo_success "🎉 Voice transcription system installed successfully!"
 echo
 
 echo "Available commands:"

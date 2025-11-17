@@ -28,12 +28,17 @@ RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
+CYAN='\033[0;36m'
+MAGENTA='\033[0;35m'
+BOLD='\033[1m'
 NC='\033[0m' # No Color
 
 echo_info() { echo -e "${BLUE}ℹ${NC} $1"; }
 echo_success() { echo -e "${GREEN}✓${NC} $1"; }
 echo_warning() { echo -e "${YELLOW}⚠${NC} $1"; }
 echo_error() { echo -e "${RED}✗${NC} $1"; }
+echo_step() { echo -e "${CYAN}${BOLD}▶${NC} ${BOLD}$1${NC}"; }
+echo_header() { echo -e "${MAGENTA}${BOLD}$1${NC}"; }
 
 # Detect if running non-interactively (from Claude Code or CI)
 if [ -t 0 ]; then
@@ -44,9 +49,18 @@ fi
 # Allow explicit override via environment variable
 INTERACTIVE="${INTERACTIVE:-true}"
 
-echo "========================================"
-echo "whisper.cpp Auto-Installer"
-echo "========================================"
+echo
+echo -e "${CYAN}${BOLD}"
+cat << "EOF"
+╔═══════════════════════════════════════════════════════╗
+║                                                       ║
+║     🎙️  WHISPER.CPP AUTO-INSTALLER                  ║
+║                                                       ║
+║     Local AI Voice Recognition Engine                ║
+║                                                       ║
+╚═══════════════════════════════════════════════════════╝
+EOF
+echo -e "${NC}"
 echo
 
 # Detect architecture
@@ -199,9 +213,10 @@ if [ "$USE_PREBUILT" = false ]; then
 fi
 
 # Download model
-echo "========================================"
-echo "Downloading Whisper Model"
-echo "========================================"
+echo
+echo_header "╔═══════════════════════════════════════════════════════╗"
+echo_header "║  📥 Downloading Whisper Model (~142 MB)              ║"
+echo_header "╚═══════════════════════════════════════════════════════╝"
 echo
 
 mkdir -p "$WHISPER_MODELS_DIR"
