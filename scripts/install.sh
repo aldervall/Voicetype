@@ -39,6 +39,27 @@ echo_error() { echo -e "${RED}✗${NC} $1"; }
 echo_step() { echo -e "${CYAN}${BOLD}▶${NC} ${BOLD}$1${NC}"; }
 echo_header() { echo -e "${MAGENTA}${BOLD}$1${NC}"; }
 
+# Parse command line arguments
+FORCE_INSTALL=false
+for arg in "$@"; do
+    case "$arg" in
+        --force)
+            FORCE_INSTALL=true
+            echo_warning "Force mode enabled: Will reinstall all components"
+            ;;
+        --help|-h)
+            echo "Voice-to-Claude-CLI Installer"
+            echo ""
+            echo "Usage: $0 [OPTIONS]"
+            echo ""
+            echo "Options:"
+            echo "  --force    Force reinstall all components (packages, scripts, services)"
+            echo "  --help     Show this help message"
+            exit 0
+            ;;
+    esac
+done
+
 # Detect if running non-interactively (from Claude Code or CI)
 if [ -t 0 ]; then
     INTERACTIVE="${INTERACTIVE:-true}"
@@ -164,12 +185,48 @@ echo_header "╔═════════════════════�
 echo_header "║  📦 STEP 1/7: Install System Dependencies            ║"
 echo_header "╚═══════════════════════════════════════════════════════╝"
 echo
-echo_step "Installing packages: $PACKAGES"
-echo_info "This may require sudo password..."
-echo
 
-# Try to install packages with error handling
-if ! $INSTALL_CMD $PACKAGES; then
+# Check which packages are already installed (unless --force)
+if [ "$FORCE_INSTALL" = true ]; then
+    MISSING_PACKAGES="$PACKAGES"
+else
+    MISSING_PACKAGES=""
+    for pkg in $PACKAGES; do
+        case "$PKG_MANAGER" in
+            pacman)
+                if ! pacman -Qi "$pkg" &>/dev/null; then
+                    MISSING_PACKAGES="$MISSING_PACKAGES $pkg"
+                fi
+                ;;
+            apt)
+                if ! dpkg -l "$pkg" 2>/dev/null | grep -q '^ii'; then
+                    MISSING_PACKAGES="$MISSING_PACKAGES $pkg"
+                fi
+                ;;
+            dnf)
+                if ! rpm -q "$pkg" &>/dev/null; then
+                    MISSING_PACKAGES="$MISSING_PACKAGES $pkg"
+                fi
+                ;;
+            zypper)
+                if ! rpm -q "$pkg" &>/dev/null; then
+                    MISSING_PACKAGES="$MISSING_PACKAGES $pkg"
+                fi
+                ;;
+        esac
+    done
+fi
+
+if [ -z "$MISSING_PACKAGES" ]; then
+    echo_success "All system packages already installed ✓"
+    echo_info "Packages: $PACKAGES"
+else
+    echo_step "Installing missing packages:$MISSING_PACKAGES"
+    echo_info "This may require sudo password..."
+    echo
+
+    # Try to install packages with error handling
+    if ! $INSTALL_CMD $MISSING_PACKAGES; then
     echo_error "Failed to install system packages!"
     echo
     echo_info "Troubleshooting steps:"
@@ -199,8 +256,9 @@ if ! $INSTALL_CMD $PACKAGES; then
     if [ "$INTERACTIVE" = "true" ]; then
         read -r
     fi
-else
-    echo_success "System dependencies installed!"
+    else
+        echo_success "System dependencies installed!"
+    fi
 fi
 echo
 
@@ -295,13 +353,20 @@ else
 fi
 
 # Install Python packages
-echo_info "Installing Python packages (this may take a minute)..."
 source "$INSTALL_DIR/venv/bin/activate"
-pip install --upgrade pip -q
-echo "ℹ Installing dependencies..."
-pip install -r "$INSTALL_DIR/requirements.txt" --progress-bar on
+
+# Check if packages are already installed (unless --force)
+if [ "$FORCE_INSTALL" = false ] && pip show requests sounddevice scipy numpy evdev &>/dev/null; then
+    echo_success "Python dependencies already installed ✓"
+else
+    echo_info "Installing Python packages (this may take a minute)..."
+    pip install --upgrade pip -q
+    echo "ℹ Installing dependencies..."
+    pip install -r "$INSTALL_DIR/requirements.txt" --progress-bar on
+    echo_success "Python packages installed"
+fi
+
 deactivate
-echo_success "Python packages installed"
 
 echo
 
@@ -315,37 +380,52 @@ echo
 mkdir -p "$BIN_DIR"
 
 # Create voiceclaudecli-daemon launcher
-cat > "$BIN_DIR/voiceclaudecli-daemon" <<EOF
+if [ "$FORCE_INSTALL" = false ] && [ -f "$BIN_DIR/voiceclaudecli-daemon" ]; then
+    echo_success "Launcher script voiceclaudecli-daemon already exists ✓"
+else
+    cat > "$BIN_DIR/voiceclaudecli-daemon" <<EOF
 #!/bin/bash
 cd "$INSTALL_DIR"
 source "$INSTALL_DIR/venv/bin/activate"
 exec python -m src.voice_holdtospeak "\$@"
 EOF
-chmod +x "$BIN_DIR/voiceclaudecli-daemon"
-echo_success "Created: $BIN_DIR/voiceclaudecli-daemon"
+    chmod +x "$BIN_DIR/voiceclaudecli-daemon"
+    echo_success "Created: $BIN_DIR/voiceclaudecli-daemon"
+fi
 
 # Create voiceclaudecli-input launcher (one-shot)
-cat > "$BIN_DIR/voiceclaudecli-input" <<EOF
+if [ "$FORCE_INSTALL" = false ] && [ -f "$BIN_DIR/voiceclaudecli-input" ]; then
+    echo_success "Launcher script voiceclaudecli-input already exists ✓"
+else
+    cat > "$BIN_DIR/voiceclaudecli-input" <<EOF
 #!/bin/bash
 cd "$INSTALL_DIR"
 source "$INSTALL_DIR/venv/bin/activate"
 exec python -m src.voice_to_text "\$@"
 EOF
-chmod +x "$BIN_DIR/voiceclaudecli-input"
-echo_success "Created: $BIN_DIR/voiceclaudecli-input"
+    chmod +x "$BIN_DIR/voiceclaudecli-input"
+    echo_success "Created: $BIN_DIR/voiceclaudecli-input"
+fi
 
 # Create voiceclaudecli-interactive launcher
-cat > "$BIN_DIR/voiceclaudecli-interactive" <<EOF
+if [ "$FORCE_INSTALL" = false ] && [ -f "$BIN_DIR/voiceclaudecli-interactive" ]; then
+    echo_success "Launcher script voiceclaudecli-interactive already exists ✓"
+else
+    cat > "$BIN_DIR/voiceclaudecli-interactive" <<EOF
 #!/bin/bash
 cd "$INSTALL_DIR"
 source "$INSTALL_DIR/venv/bin/activate"
 exec python -m src.voice_to_claude "\$@"
 EOF
-chmod +x "$BIN_DIR/voiceclaudecli-interactive"
-echo_success "Created: $BIN_DIR/voiceclaudecli-interactive"
+    chmod +x "$BIN_DIR/voiceclaudecli-interactive"
+    echo_success "Created: $BIN_DIR/voiceclaudecli-interactive"
+fi
 
 # Create voiceclaudecli-stop-server launcher (manual shutdown)
-cat > "$BIN_DIR/voiceclaudecli-stop-server" <<EOF
+if [ "$FORCE_INSTALL" = false ] && [ -f "$BIN_DIR/voiceclaudecli-stop-server" ]; then
+    echo_success "Launcher script voiceclaudecli-stop-server already exists ✓"
+else
+    cat > "$BIN_DIR/voiceclaudecli-stop-server" <<EOF
 #!/bin/bash
 # Stop the whisper.cpp server to free up system resources
 
@@ -367,8 +447,9 @@ else
     echo "ℹ whisper-server is not running"
 fi
 EOF
-chmod +x "$BIN_DIR/voiceclaudecli-stop-server"
-echo_success "Created: $BIN_DIR/voiceclaudecli-stop-server"
+    chmod +x "$BIN_DIR/voiceclaudecli-stop-server"
+    echo_success "Created: $BIN_DIR/voiceclaudecli-stop-server"
+fi
 
 echo
 
@@ -383,7 +464,10 @@ SYSTEMD_USER_DIR="$HOME/.config/systemd/user"
 mkdir -p "$SYSTEMD_USER_DIR"
 
 # Create service file with correct paths
-cat > "$SYSTEMD_USER_DIR/voiceclaudecli-daemon.service" <<EOF
+if [ "$FORCE_INSTALL" = false ] && [ -f "$SYSTEMD_USER_DIR/voiceclaudecli-daemon.service" ]; then
+    echo_success "Systemd service already configured ✓"
+else
+    cat > "$SYSTEMD_USER_DIR/voiceclaudecli-daemon.service" <<EOF
 [Unit]
 Description=Voice-to-Claude-CLI Hold-to-Speak Daemon
 After=default.target
@@ -398,7 +482,8 @@ RestartSec=5
 WantedBy=default.target
 EOF
 
-echo_success "Created systemd service: $SYSTEMD_USER_DIR/voiceclaudecli-daemon.service"
+    echo_success "Created systemd service: $SYSTEMD_USER_DIR/voiceclaudecli-daemon.service"
+fi
 
 # Reload systemd
 systemctl --user daemon-reload
