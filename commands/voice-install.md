@@ -8,17 +8,24 @@ You are helping the user install Voice-to-Claude-CLI, a local voice transcriptio
 
 **1. Run the automated installer:**
 ```bash
-if [ -f "$CLAUDE_PLUGIN_ROOT/scripts/install.sh" ]; then
-  cd "$CLAUDE_PLUGIN_ROOT" && INTERACTIVE=false bash scripts/install.sh
+# Find the plugin installation directory
+PLUGIN_DIR=""
+if [ -n "$CLAUDE_PLUGIN_ROOT" ] && [ -f "$CLAUDE_PLUGIN_ROOT/scripts/install.sh" ]; then
+  PLUGIN_DIR="$CLAUDE_PLUGIN_ROOT"
+elif [ -f "$HOME/.claude/plugins/marketplaces/voice-to-claude-marketplace/scripts/install.sh" ]; then
+  PLUGIN_DIR="$HOME/.claude/plugins/marketplaces/voice-to-claude-marketplace"
 elif [ -f "scripts/install.sh" ]; then
-  INTERACTIVE=false bash scripts/install.sh
+  PLUGIN_DIR="$(pwd)"
 else
   echo "ERROR: Cannot find install.sh script!"
-  echo "CLAUDE_PLUGIN_ROOT: $CLAUDE_PLUGIN_ROOT"
-  echo "Current directory: $(pwd)"
-  ls -la "$CLAUDE_PLUGIN_ROOT" 2>/dev/null || echo "CLAUDE_PLUGIN_ROOT not accessible"
+  echo "Searched locations:"
+  echo "  - \$CLAUDE_PLUGIN_ROOT/scripts/install.sh"
+  echo "  - ~/.claude/plugins/marketplaces/voice-to-claude-marketplace/scripts/install.sh"
+  echo "  - ./scripts/install.sh"
   exit 1
 fi
+
+cd "$PLUGIN_DIR" && INTERACTIVE=false bash scripts/install.sh
 ```
 
 This script will automatically:
