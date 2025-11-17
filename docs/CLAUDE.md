@@ -14,8 +14,9 @@ Voice-to-Claude-CLI is a **cross-platform** Python application that provides loc
 **Documentation Guide:**
 - **CLAUDE.md** (this file) - Developer guide for Claude Code: architecture, troubleshooting, development workflow
 - **README.md** - User installation guide and quick start
+- **docs/INDEX.md** - Complete documentation navigation and task finder
 - **docs/ADVANCED.md** - User customization options (hotkeys, duration, beeps, notifications, scripting)
-- **docs/HANDOVER.md** - Development session history and architectural decisions
+- **docs/HANDOVER.md** - Development session history and architectural decisions (23 sessions)
 
 ## Critical Prerequisites
 
@@ -42,13 +43,18 @@ bash .whisper/scripts/start-server.sh
 
 ## Quick Setup for Development
 
-If the project is already installed, activate the virtual environment:
+**New to this codebase?** Start here:
+1. Read the **Documentation Guide** section above to understand where everything is
+2. Check `docs/INDEX.md` for task-oriented navigation
+3. Review the **Architecture Overview** section below for the big picture
+
+**If the project is already installed**, activate the virtual environment:
 
 ```bash
 source venv/bin/activate
 ```
 
-For new installations, see README.md or run:
+**For new installations**, see README.md or run:
 ```bash
 bash scripts/install.sh  # Automated installer
 /voice:voice-install     # From Claude Code (note: command prefix is /voice: not /voice-)
@@ -279,9 +285,16 @@ systemctl --user status voiceclaudecli-daemon whisper-server ydotool
 - Test on Wayland and X11 if possible
 - Update all three modes if core transcription changes
 
-### Recent Changes (Sessions 20-21)
+### Recent Changes (Sessions 20-22)
 
-**Critical Fixes Applied:**
+**Session 22 (2025-11-17) - Project Cleanup & Documentation:**
+- Complete project audit (35 files analyzed)
+- Created comprehensive documentation index (`docs/INDEX.md`)
+- Removed 3 obsolete files (cleanup backup, duplicate handover)
+- Enhanced CLAUDE.md with documentation guide
+- All functionality verified and operational
+
+**Sessions 20-21 - Critical Fixes:**
 - Plugin discovery fixed (plugin.json moved to root)
 - Installation scripts no longer use `set -e` (graceful error handling)
 - Plugin name shortened to "voice" (commands: `/voice:voice-install`, `/voice:voice`)
@@ -345,7 +358,13 @@ voice-to-claude-cli/
 
 **Configuration:** `config/voice-holdtospeak.service` (systemd template), `requirements.txt`, `.gitignore`
 
-**Docs:** `docs/CLAUDE.md` (this file), `docs/README.md` (user guide), `docs/HANDOVER.md` (session history), `docs/INSTALLATION_FLOW.md` (testing guide), `docs/QUICK_TEST_CHECKLIST.md` (5-min tests), `docs/INSTALLATION_STATUS.md` (current state), `HANDOVER_SUMMARY.md` (latest handover)
+**Docs:**
+- **Navigation:** `docs/INDEX.md` (documentation finder)
+- **Developer:** `docs/CLAUDE.md` (this file)
+- **User:** `docs/README.md` (user guide), `docs/ADVANCED.md` (customization)
+- **History:** `docs/HANDOVER.md` (23 sessions)
+- **Testing:** `docs/INSTALLATION_FLOW.md` (7-phase guide), `docs/QUICK_TEST_CHECKLIST.md` (5-min tests)
+- **Status:** `docs/INSTALLATION_STATUS.md` (current state), `docs/PROJECT_STRUCTURE_AUDIT.md` (file inventory)
 
 **Generated files:**
 - `~/.local/bin/voiceclaudecli-*` (launchers)
