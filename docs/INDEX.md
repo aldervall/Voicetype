@@ -172,5 +172,5 @@ docs/
 ---
 
 **Last Updated:** 2025-11-17
-**Version:** v1.1.0
+**Version:** v1.3.0
 **Status:** ✅ Production Ready
