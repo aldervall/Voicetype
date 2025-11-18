@@ -15,7 +15,7 @@ import sounddevice as sd
 import scipy.io.wavfile as wav
 import tempfile
 import requests
-from .voice_to_claude import VoiceTranscriber, SAMPLE_RATE, WHISPER_URL
+from .voice_type import VoiceTranscriber, SAMPLE_RATE, WHISPER_URL
 from .platform_detect import get_platform_info
 import evdev
 from evdev import ecodes
@@ -141,8 +141,10 @@ class HoldToSpeakDaemon:
         print("⚠ whisper server not running. Attempting to start local server...")
 
         # Try to use the start-server.sh script
+        # Get project root (this file is in src/, project root is one level up)
         script_dir = os.path.dirname(os.path.abspath(__file__))
-        start_script = os.path.join(script_dir, '../.whisper/scripts/start-server.sh')
+        project_root = os.path.abspath(os.path.join(script_dir, '..'))
+        start_script = os.path.join(project_root, '.whisper/scripts/start-server.sh')
 
         if os.path.exists(start_script):
             try:
