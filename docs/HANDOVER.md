@@ -557,7 +557,7 @@ echo "✓ System healthy"
 
 ### 📦 Installation Status
 
-**Automated Installer:** `bash scripts/install.sh` or `/voice:voice-install`
+**Automated Installer:** `bash scripts/install.sh` or `/voice-claudecli-install`
 
 **7-Step Process:**
 1. System Dependencies (distro-specific packages)
@@ -592,8 +592,8 @@ voice-to-claude-cli/
 │   ├── plugin.json              # Plugin metadata (root!)
 │   ├── .claude-plugin/          # Marketplace metadata
 │   ├── commands/                # Slash commands
-│   │   ├── voice.md            # /voice:voice
-│   │   └── voice-install.md    # /voice:voice-install
+│   │   ├── voice.md            # /voice-claudecli
+│   │   └── voice-install.md    # /voice-claudecli-install
 │   └── skills/voice/            # Claude Skill
 │       ├── SKILL.md            # Skill definition
 │       └── scripts/transcribe.py
@@ -803,7 +803,7 @@ systemctl --user restart voiceclaudecli-daemon
 # Run installer
 bash scripts/install.sh
 # or
-/voice:voice-install
+/voice-claudecli-install
 ```
 
 ---

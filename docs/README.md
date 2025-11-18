@@ -32,10 +32,20 @@ After installation, go back to `/plugin`, select "Manage plugins", find `voice`,
 
 **Step 3: Run the installer**
 ```bash
-/voice:voice-install
+/voice-claudecli-install
 ```
 
 That's it! The installer shows beautiful progress indicators and progress bars for the ~142MB model download.
+
+### Available Commands
+
+Once installed, you have three slash commands available in Claude Code:
+
+```bash
+/voice-claudecli-install    # Install voice transcription system
+/voice-claudecli-uninstall  # Complete removal of everything
+/voice-claudecli            # Quick voice input (one-shot transcription)
+```
 
 ## Usage
 
@@ -61,6 +71,32 @@ curl http://127.0.0.1:2022/health
 ```
 
 **Why manual shutdown?** Keeps your system lightweight - the server only runs when you're actively using voice input. Startup is nearly instant (~213ms) so there's no convenience trade-off!
+
+### Uninstalling
+
+Complete removal of everything:
+
+```bash
+# From Claude Code
+/voice-claudecli-uninstall
+
+# Or from terminal (interactive - prompts for each item)
+bash scripts/uninstall.sh
+
+# Remove everything (nuclear option)
+bash scripts/uninstall.sh --all
+
+# Keep models and project (remove only system integration)
+bash scripts/uninstall.sh --keep-data
+```
+
+**What gets removed:**
+- ✅ Systemd services (daemon, whisper-server)
+- ✅ Launcher scripts
+- ✅ Installation directories
+- ✅ Optional: whisper.cpp models (~142 MB)
+- ✅ Optional: Project directory
+- ✅ Optional: Claude Code plugin integration
 
 ## Features
 

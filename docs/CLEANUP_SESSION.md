@@ -202,8 +202,8 @@ voice-to-claude-cli/
 
 ```
 plugin.json at root: ✅
-commands/voice-install.md: ✅
-commands/voice.md: ✅
+commands/voice-claudecli-install.md: ✅
+commands/voice-claudecli.md: ✅
 skills/voice/SKILL.md: ✅
 .claude-plugin/marketplace.json: ✅
 ```

@@ -56,8 +56,8 @@ source venv/bin/activate
 
 **For new installations**, see README.md or run:
 ```bash
-bash scripts/install.sh  # Automated installer
-/voice:voice-install     # From Claude Code (note: command prefix is /voice: not /voice-)
+bash scripts/install.sh       # Automated installer
+/voice-claudecli-install      # From Claude Code
 ```
 
 ## Running and Testing
@@ -136,10 +136,11 @@ The `skills/voice/` directory contains a Skill that enables Claude to autonomous
 
 ### Slash Commands Available
 
-- `/voice:voice-install` - Automated installation wizard (7-step guided installation)
-- `/voice:voice` - Quick voice input (one-shot transcription, types into active window)
+- `/voice-claudecli-install` - Automated installation wizard (7-step guided installation)
+- `/voice-claudecli-uninstall` - Complete uninstaller (removes everything cleanly)
+- `/voice-claudecli` - Quick voice input (one-shot transcription, types into active window)
 
-**Note:** Commands use `/voice:` prefix (plugin name is "voice")
+**Note:** All commands use consistent `/voice-claudecli` prefix for clarity (plugin name is "voice")
 
 ## Architecture Overview
 
@@ -342,7 +343,7 @@ systemctl --user status voiceclaudecli-daemon whisper-server ydotool
 **Sessions 20-21 - Critical Fixes:**
 - Plugin discovery fixed (plugin.json moved to root)
 - Installation scripts no longer use `set -e` (graceful error handling)
-- Plugin name shortened to "voice" (commands: `/voice:voice-install`, `/voice:voice`)
+- Plugin name shortened to "voice" (commands: `/voice-claudecli-install`, `/voice-claudecli`)
 - Added ldd test for pre-built whisper binary (commit e315fcb)
 - Automatic fallback to source build if shared libraries missing
 

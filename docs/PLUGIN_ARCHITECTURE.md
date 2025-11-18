@@ -354,7 +354,7 @@ After fixes are implemented:
 - `README.md` - User installation guide
 - `HANDOVER.md` - Session history
 - `.claude-plugin/plugin.json` - Current (broken) location
-- `commands/voice-install.md` - Installation command definition
+- `commands/voice-claudecli-install.md` - Installation command definition
 - `skills/voice/SKILL.md` - Voice transcription skill
 
 ---

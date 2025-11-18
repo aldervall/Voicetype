@@ -98,8 +98,8 @@ ls ~/.claude/plugins/marketplaces/voice-to-claude-marketplace/
 2. Run `/help` and search for voice commands
 
 **Expected Results:**
-- [ ] `/voice:voice-install` command available
-- [ ] `/voice:voice` command available
+- [ ] `/voice-claudecli-install` command available
+- [ ] `/voice-claudecli` command available
 - [ ] Commands appear in `/help` output
 - [ ] No MCP commands (e.g., `/mcp__voicemode__*`) present
 
@@ -117,10 +117,10 @@ ls ~/.claude/plugins/marketplaces/voice-to-claude-marketplace/commands/
 
 ---
 
-### Phase 5: Run Installation (/voice:voice-install)
+### Phase 5: Run Installation (/voice-claudecli-install)
 
 **User Actions:**
-1. Run `/voice:voice-install`
+1. Run `/voice-claudecli-install`
 2. Watch installation progress
 
 **Expected Results:**
@@ -323,7 +323,7 @@ Installation flow is considered successful when:
 - [ ] Add marketplace
 - [ ] Install & enable plugin
 - [ ] Verify commands appear
-- [ ] Run `/voice:voice-install`
+- [ ] Run `/voice-claudecli-install`
 - [ ] Check whisper server: `curl http://127.0.0.1:2022/health`
 
 **Full Test (15 minutes):**

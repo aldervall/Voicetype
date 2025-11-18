@@ -97,7 +97,7 @@ bash scripts/install-whisper.sh
 - [x] Marketplace addition works
 - [x] Plugin installation succeeds
 - [x] Plugin enable/restart works
-- [x] Commands appear correctly (`/voice:voice-install`, `/voice:voice`)
+- [x] Commands appear correctly (`/voice-claudecli-install`, `/voice-claudecli`)
 - [x] No old MCP commands visible
 
 ### Phase 5: Installation Script ⚠️ NEEDS PLUGIN REFRESH
@@ -262,7 +262,7 @@ Once all testing passes:
 - ✅ **After:** ldd test detects issue, falls back to source build
 
 - ❌ **Before:** Long command names (`/voice-transcription:voice-install`)
-- ✅ **After:** Clean short names (`/voice:voice-install`)
+- ✅ **After:** Clean short names (`/voice-claudecli-install`)
 
 - ❌ **Before:** Plain text output, no progress indication
 - ✅ **After:** Beautiful ASCII art, colors, progress steps

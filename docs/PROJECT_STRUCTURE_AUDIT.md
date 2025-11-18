@@ -24,8 +24,8 @@
 
 **Claude Code Integration:**
 - `plugin.json` - Plugin metadata (at root for discovery) ✅
-- `commands/voice-install.md` - `/voice:voice-install` command
-- `commands/voice.md` - `/voice:voice` command
+- `commands/voice-claudecli-install.md` - `/voice-claudecli-install` command
+- `commands/voice-claudecli.md` - `/voice-claudecli` command
 - `skills/voice/SKILL.md` - Voice transcription skill definition
 - `skills/voice/scripts/transcribe.py` - Skill execution script
 
@@ -193,7 +193,7 @@ The project structure is **excellent as-is**. Reasons:
 
 **Quick Start:**
 1. `README.md` - Installation and basic usage
-2. `/voice:voice-install` - Run the installer
+2. `/voice-claudecli-install` - Run the installer
 3. `ADVANCED.md` - Customization options
 
 **Troubleshooting:**

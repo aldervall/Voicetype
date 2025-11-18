@@ -27,8 +27,8 @@ Use this checklist to quickly verify the installation flow works after making ch
 
 ```bash
 # Check commands exist
-/voice:voice-install
-/voice:voice
+/voice-claudecli-install
+/voice-claudecli
 /help | grep voice
 ```
 
@@ -42,7 +42,7 @@ Use this checklist to quickly verify the installation flow works after making ch
 ### 3. Run Installer (2 min)
 
 ```bash
-/voice:voice-install
+/voice-claudecli-install
 ```
 
 Watch for:

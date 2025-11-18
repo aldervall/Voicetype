@@ -15,7 +15,7 @@
 
 2. **Run the installer:**
    ```bash
-   /voice:voice-install  # From Claude Code
+   /voice-claudecli-install  # From Claude Code
    ```
 
 3. **Start using:**
