@@ -505,6 +505,21 @@ EOF
     echo_success "Created: $BIN_DIR/voiceclaudecli-stop-server"
 fi
 
+# Create voiceclaudecli-uninstall launcher (standalone uninstaller)
+if [ "$FORCE_INSTALL" = false ] && [ -f "$BIN_DIR/voiceclaudecli-uninstall" ]; then
+    echo_success "Launcher script voiceclaudecli-uninstall already exists ✓"
+else
+    # Copy the standalone uninstaller script
+    if [ -f "$PROJECT_ROOT/scripts/standalone-uninstall.sh" ]; then
+        cp "$PROJECT_ROOT/scripts/standalone-uninstall.sh" "$BIN_DIR/voiceclaudecli-uninstall"
+        chmod +x "$BIN_DIR/voiceclaudecli-uninstall"
+        echo_success "Created: $BIN_DIR/voiceclaudecli-uninstall"
+    else
+        echo_warning "Standalone uninstaller not found: $PROJECT_ROOT/scripts/standalone-uninstall.sh"
+        echo_info "Uninstaller will not be available - use scripts/uninstall.sh manually"
+    fi
+fi
+
 echo
 
 # Install systemd service
@@ -616,6 +631,7 @@ echo "  voiceclaudecli-daemon       - Start F12 hold-to-speak daemon"
 echo "  voiceclaudecli-input        - One-shot voice input"
 echo "  voiceclaudecli-interactive  - Interactive terminal mode"
 echo "  voiceclaudecli-stop-server  - Stop whisper.cpp server (save resources)"
+echo "  voiceclaudecli-uninstall    - Remove Voice-to-Claude-CLI from system"
 echo
 
 echo "To start the daemon as a service:"

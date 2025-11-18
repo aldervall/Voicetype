@@ -1,96 +1,92 @@
 # Uninstall Voice-to-Claude-CLI
+---
+description: Complete removal of Voice-to-Claude-CLI from your system
+---
 
-Complete removal of voice-to-claude-cli including whisper.cpp, systemd services, launcher scripts, and Claude Code plugin integration.
+You are helping the user uninstall Voice-to-Claude-CLI completely from their system.
 
-## What Will Be Removed
+## Overview
 
-**System Components:**
-- ✅ All systemd user services (daemon, whisper-server)
+This uninstaller is **standalone** - it works even if:
+- Plugin was installed from marketplace (no dev folder)
+- Development directory was deleted
+- Plugin was moved or renamed
+
+It removes:
+- Claude Code plugin registration and files
+- Systemd services and launcher scripts
+- Running processes
+- Optionally: development directory and whisper models
+
+## Steps
+
+1. **Ask user what to remove:**
+   Use the AskUserQuestion tool to ask:
+   - Question: "What level of cleanup do you want for Voice-to-Claude-CLI?"
+   - Header: "Cleanup Level"
+   - Options:
+     * "Remove everything" - Complete removal (plugin, system integration, dev directory, models)
+     * "Keep development files" - Remove only system integration (keep dev folder and models for easy reinstall)
+
+2. **Run the standalone uninstaller:**
+   ```bash
+   voiceclaudecli-uninstall [--all|--keep-data]
+   ```
+
+   - If user chose "Remove everything": `voiceclaudecli-uninstall --all`
+   - If user chose "Keep development files": `voiceclaudecli-uninstall --keep-data`
+
+3. **Monitor output** and report status to user
+
+## What Gets Removed
+
+**Always removed:**
+- ✅ Claude Code plugin registration (from ~/.claude/plugins/installed_plugins.json)
+- ✅ Plugin files (from marketplace or local installation)
+- ✅ All systemd user services (voiceclaudecli-daemon, whisper-server)
 - ✅ All launcher scripts (~/.local/bin/voiceclaudecli-*)
-- ✅ Installation directory (~/.local/voiceclaudecli)
-- ✅ Temporary build artifacts (/tmp/whisper.cpp)
+- ✅ Running processes
 
-**Optional Removals (user prompted):**
-- whisper.cpp models (~142 MB in .whisper/models/)
-- Project directory (where you ran install from)
-- Claude Code plugin integration
-
-**NOT Removed:**
-- User group membership (input group - requires logout to change)
-
-## Usage
-
-Run the uninstaller:
-
-```bash
-bash scripts/uninstall.sh
-```
-
-Or use the interactive wizard:
-
-```bash
-# Follow prompts for what to remove
-bash scripts/uninstall.sh --interactive
-
-# Remove everything without prompts
-bash scripts/uninstall.sh --all
-
-# Keep models and installation files (remove only system integration)
-bash scripts/uninstall.sh --keep-data
-```
-
-## What Happens
-
-1. **Stops all running processes** (daemon, whisper-server)
-2. **Disables systemd services** (prevents auto-start)
-3. **Removes service files** from ~/.config/systemd/user/
-4. **Removes launcher scripts** from ~/.local/bin/
-5. **Removes installation directories** (with size reporting)
-6. **Prompts for optional cleanup** (models, installation dir, Claude plugin)
-
-## Safety Features
-
-- ✅ **Interactive confirmation** before removing anything
-- ✅ **Shows disk space** that will be recovered
-- ✅ **Keeps local installation** by default (you can re-install easily)
-- ✅ **Non-destructive** - only removes what it installed
-
-## After Uninstall
-
-**To reinstall later:**
-```bash
-# If you kept the installation directory
-cd voice-to-claude-cli
-bash scripts/install.sh
-
-# Or clone fresh
-git clone https://github.com/aldervall/Voice-to-Claude-CLI.git
-cd Voice-to-Claude-CLI
-bash scripts/install.sh
-```
-
-**Manual cleanup (if needed):**
-```bash
-# Remove yourself from input group (requires logout)
-sudo deluser $USER input
-
-# Then log out and back in
-```
+**Optionally removed (based on user choice):**
+- Development directory (if found)
+- whisper.cpp models (~142 MB)
 
 ## Troubleshooting
 
+**If voiceclaudecli-uninstall command not found:**
+The standalone uninstaller might not have been installed. Tell the user they can:
+1. Check if it exists: `ls -la ~/.local/bin/voiceclaudecli-uninstall`
+2. If missing, they can manually remove components:
+   - Stop services: `systemctl --user stop voiceclaudecli-daemon whisper-server`
+   - Disable services: `systemctl --user disable voiceclaudecli-daemon whisper-server`
+   - Remove scripts: `rm ~/.local/bin/voiceclaudecli-*`
+   - Remove services: `rm ~/.config/systemd/user/voiceclaudecli-*.service`
+   - Reload systemd: `systemctl --user daemon-reload`
+
 **"Permission denied" errors:**
-- Run as your normal user (not sudo)
-- If services won't stop, try: `systemctl --user daemon-reload`
+- Run as normal user (not sudo)
+- These are user services, not system services
 
 **"Service not found" errors:**
-- This is normal - means service was already removed or never installed
+- Normal - means service was already removed
 - Uninstaller continues safely
 
-**Want to keep whisper.cpp for other projects?**
-- Use `--keep-data` flag to only remove voice-to-claude-cli integration
-- whisper.cpp and models stay in installation directory
+## After Uninstall
 
-## Privacy Note
+**To reinstall:**
+- From marketplace: Use Claude Code plugin marketplace
+- Manually: `git clone https://github.com/aldervall/Voice-to-Claude-CLI.git && cd Voice-to-Claude-CLI && bash scripts/install.sh`
+- From dev directory (if kept): `cd voice-to-claude-cli && bash scripts/install.sh`
 
-Uninstallation is **completely local** - no data is sent anywhere. The uninstaller only removes files from your computer.
+**Manual cleanup (if needed):**
+```bash
+# Remove from input group (requires logout)
+sudo deluser $USER input
+```
+
+## Important Notes
+
+- The uninstaller removes itself last (voiceclaudecli-uninstall script)
+- Restart Claude Code to refresh plugin list after uninstall
+- Development directory is kept by default for easy reinstall
+- All uninstall operations are local - no network calls
