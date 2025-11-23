@@ -2,12 +2,12 @@
   "name": "voicetype-marketplace",
   "owner": {
     "name": "VoiceType",
-    "url": "https://github.com/aldervall/Voice-to-Claude-CLI"
+    "url": "https://github.com/aldervall/Voicetype"
   },
   "metadata": {
     "description": "VoiceType - Local voice transcription using whisper.cpp",
     "version": "2.0.0",
-    "homepage": "https://github.com/aldervall/Voice-to-Claude-CLI",
+    "homepage": "https://github.com/aldervall/Voicetype",
     "pluginRoot": "./",
     "totalPlugins": 1,
     "skillsEnabled": 1,
