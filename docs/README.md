@@ -22,13 +22,9 @@ Select "Add Marketplace" and enter:
 aldervall/VoiceType
 ```
 
-![Add Marketplace](docs/images/Plugin.AddMarket.png)
-
 **Step 2: Enable the plugin**
 
 After installation, go back to `/plugin`, select "Manage plugins", find `voice`, press **Space** to enable it (turns yellow), then click "Apply changes".
-
-![Enable Plugin](docs/images/Plugin.Enable.png)
 
 **Restart Claude Code** when prompted!
 
