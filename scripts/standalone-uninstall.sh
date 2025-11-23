@@ -1,9 +1,9 @@
 #!/bin/bash
 
 #===============================================================================
-# Voice-to-Claude-CLI Standalone Uninstaller
+# VoiceType Standalone Uninstaller
 #
-# This script is SELF-CONTAINED and installed to ~/.local/bin/voiceclaudecli-uninstall
+# This script is SELF-CONTAINED and installed to ~/.local/bin/voicetype-uninstall
 # It does NOT require the project directory to exist (marketplace-friendly!)
 #
 # Removes:
@@ -15,10 +15,10 @@
 # - Optionally: whisper models, development directory
 #
 # Usage:
-#   voiceclaudecli-uninstall              # Interactive (default)
-#   voiceclaudecli-uninstall --all        # Remove everything
-#   voiceclaudecli-uninstall --keep-data  # Keep models & dev folder
-#   voiceclaudecli-uninstall --help       # Show help
+#   voicetype-uninstall              # Interactive (default)
+#   voicetype-uninstall --all        # Remove everything
+#   voicetype-uninstall --keep-data  # Keep models & dev folder
+#   voicetype-uninstall --help       # Show help
 #===============================================================================
 
 # Don't use set -e - we want graceful error handling
@@ -39,14 +39,14 @@ while [[ $# -gt 0 ]]; do
             ;;
         --help|-h)
             cat << EOF
-Voice-to-Claude-CLI Standalone Uninstaller
+VoiceType Standalone Uninstaller
 
 This uninstaller works regardless of how the plugin was installed:
   • From Claude Code marketplace
   • From local development directory
   • From git clone
 
-Usage: voiceclaudecli-uninstall [OPTIONS]
+Usage: voicetype-uninstall [OPTIONS]
 
 Options:
   (none)          Interactive mode - prompts for each optional removal
@@ -59,7 +59,7 @@ What Gets Removed:
     • Claude Code plugin registration
     • Plugin files (from marketplace or ~/.claude/plugins/local/)
     • Systemd services (daemon, whisper-server)
-    • Launcher scripts (~/.local/bin/voiceclaudecli-*)
+    • Launcher scripts (~/.local/bin/voicetype-*)
     • Running processes
 
   Optional (prompted in interactive mode):
@@ -67,9 +67,9 @@ What Gets Removed:
     • whisper.cpp models (~142 MB)
 
 Examples:
-  voiceclaudecli-uninstall              # Ask about each optional item
-  voiceclaudecli-uninstall --all        # Nuclear option - remove everything
-  voiceclaudecli-uninstall --keep-data  # Keep models for re-install
+  voicetype-uninstall              # Ask about each optional item
+  voicetype-uninstall --all        # Nuclear option - remove everything
+  voicetype-uninstall --keep-data  # Keep models for re-install
 
 EOF
             exit 0
@@ -93,14 +93,14 @@ cat << "EOF"
 
 ╔═══════════════════════════════════════════════════════╗
 ║                                                       ║
-║        🗑  Voice-to-Claude-CLI Uninstaller          ║
+║        🗑  VoiceType Uninstaller          ║
 ║           (Standalone - No Project Required)         ║
 ║                                                       ║
 ╚═══════════════════════════════════════════════════════╝
 
 EOF
 
-echo_info "This will remove Voice-to-Claude-CLI from your system"
+echo_info "This will remove VoiceType from your system"
 echo_warning "This action cannot be undone!"
 echo ""
 
@@ -113,8 +113,8 @@ if [ -f "$CLAUDE_PLUGINS_JSON" ]; then
     echo_info "Checking Claude Code plugin registry..."
 
     # Look for voice-to-claude-cli plugin (could have different names)
-    # Possible plugin names: voice@*, voiceclaudecli@*, voice-to-claude-cli@*
-    PLUGIN_NAME=$(jq -r '.plugins | keys[] | select(test("voice|voiceclaudecli"))' "$CLAUDE_PLUGINS_JSON" 2>/dev/null | head -1)
+    # Possible plugin names: voice@*, voicetype@*, voice-to-claude-cli@*
+    PLUGIN_NAME=$(jq -r '.plugins | keys[] | select(test("voice|voicetype"))' "$CLAUDE_PLUGINS_JSON" 2>/dev/null | head -1)
 
     if [ -n "$PLUGIN_NAME" ]; then
         PLUGIN_INSTALL_PATH=$(jq -r ".plugins[\"$PLUGIN_NAME\"].installPath" "$CLAUDE_PLUGINS_JSON" 2>/dev/null)
@@ -156,7 +156,7 @@ echo "========================================="
 echo ""
 
 # Stop systemd services
-for service in voiceclaudecli-daemon whisper-server voice-holdtospeak voice-input; do
+for service in voicetype-daemon whisper-server voice-holdtospeak voice-input; do
     if systemctl --user is-active "$service" &>/dev/null; then
         echo_info "Stopping $service..."
         systemctl --user stop "$service" 2>/dev/null || true
@@ -165,7 +165,7 @@ for service in voiceclaudecli-daemon whisper-server voice-holdtospeak voice-inpu
 done
 
 # Disable systemd services
-for service in voiceclaudecli-daemon whisper-server voice-holdtospeak voice-input; do
+for service in voicetype-daemon whisper-server voice-holdtospeak voice-input; do
     if systemctl --user is-enabled "$service" &>/dev/null; then
         echo_info "Disabling $service..."
         systemctl --user disable "$service" 2>/dev/null || true
@@ -203,7 +203,7 @@ echo ""
 SERVICE_DIR="$HOME/.config/systemd/user"
 SERVICES_REMOVED=0
 
-for service_file in voiceclaudecli-daemon.service whisper-server.service voice-holdtospeak.service voice-input.service; do
+for service_file in voicetype-daemon.service whisper-server.service voice-holdtospeak.service voice-input.service; do
     if [ -f "$SERVICE_DIR/$service_file" ]; then
         echo_info "Removing $service_file..."
         rm -f "$SERVICE_DIR/$service_file"
@@ -229,8 +229,8 @@ echo ""
 BIN_DIR="$HOME/.local/bin"
 SCRIPTS_REMOVED=0
 
-# Note: We keep voiceclaudecli-uninstall until the very end (this script!)
-for script in voiceclaudecli-daemon voiceclaudecli-input voiceclaudecli-interactive voiceclaudecli-stop-server claude-voice-input voice-input; do
+# Note: We keep voicetype-uninstall until the very end (this script!)
+for script in voicetype-daemon voicetype-input voicetype-interactive voicetype-stop-server claude-voice-input voice-input; do
     if [ -f "$BIN_DIR/$script" ]; then
         echo_info "Removing $script..."
         rm -f "$BIN_DIR/$script"
@@ -325,10 +325,10 @@ echo ""
 # Try to find development directory (separate from plugin installation)
 POSSIBLE_DEV_DIRS=(
     "$HOME/voice-to-claude-cli"
-    "$HOME/Voice-to-Claude-CLI"
+    "$HOME/VoiceType"
     "$HOME/projects/voice-to-claude-cli"
     "$HOME/aldervall/voice-to-claude-cli"
-    "$HOME/aldervall/Voice-to-Claude-CLI"
+    "$HOME/aldervall/VoiceType"
     "$HOME/code/voice-to-claude-cli"
     "$HOME/dev/voice-to-claude-cli"
 )
@@ -480,10 +480,10 @@ echo "========================================="
 echo ""
 
 # Remove this uninstaller script itself (last step!)
-if [ -f "$BIN_DIR/voiceclaudecli-uninstall" ]; then
+if [ -f "$BIN_DIR/voicetype-uninstall" ]; then
     echo_info "Removing uninstaller script..."
-    rm -f "$BIN_DIR/voiceclaudecli-uninstall"
-    echo_success "Removed voiceclaudecli-uninstall"
+    rm -f "$BIN_DIR/voicetype-uninstall"
+    echo_success "Removed voicetype-uninstall"
 fi
 
 echo ""
@@ -496,7 +496,7 @@ cat << "EOF"
 
 EOF
 
-echo_success "Voice-to-Claude-CLI completely removed from your system"
+echo_success "VoiceType completely removed from your system"
 echo ""
 
 # Show what was kept
@@ -524,6 +524,6 @@ if [ ${#FOUND_DEV_DIRS[@]} -gt 0 ] && [ "$REMOVE_DEV" = false ]; then
     echo_success "To reinstall: cd ${FOUND_DEV_DIRS[0]} && bash scripts/install.sh"
 else
     echo_success "To reinstall: Use Claude Code plugin marketplace"
-    echo_success "Or manually: git clone https://github.com/aldervall/Voice-to-Claude-CLI.git && cd Voice-to-Claude-CLI && bash scripts/install.sh"
+    echo_success "Or manually: git clone https://github.com/aldervall/VoiceType.git && cd VoiceType && bash scripts/install.sh"
 fi
 echo ""

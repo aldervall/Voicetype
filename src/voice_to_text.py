@@ -9,7 +9,7 @@ Prerequisites:
 """
 import sys
 import subprocess
-from .voice_to_claude import VoiceTranscriber, DURATION
+from .voice_type import VoiceTranscriber, DURATION
 from .platform_detect import get_platform_info
 
 

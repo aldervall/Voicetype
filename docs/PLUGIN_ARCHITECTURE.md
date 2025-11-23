@@ -1,11 +1,11 @@
-# Claude Code Plugin Architecture - Voice-to-Claude-CLI
+# Claude Code Plugin Architecture - VoiceType
 
 **Last Updated:** 2025-11-17
 **Status:** 🔴 BROKEN - Requires Major Refactoring
 
 ## Executive Summary
 
-The Voice-to-Claude-CLI plugin has a **dual identity crisis** preventing proper discovery by Claude Code. Users cannot see `/voice-install` because the plugin registration architecture is fundamentally broken.
+The VoiceType plugin has a **dual identity crisis** preventing proper discovery by Claude Code. Users cannot see `/voice-install` because the plugin registration architecture is fundamentally broken.
 
 ### 🚨 Critical Issues
 
@@ -99,7 +99,7 @@ voice-to-claude-cli/                    # Git repository root
 │   └── install-whisper.sh              # ❌ CRASHES on any error (set -e)
 │
 ├── src/                                # Python source code
-│   ├── voice_to_claude.py
+│   ├── voice_type.py
 │   ├── platform_detect.py
 │   └── ...
 │
@@ -110,7 +110,7 @@ voice-to-claude-cli/                    # Git repository root
 
 **Step 1:** User adds marketplace
 ```bash
-/plugin marketplace add https://github.com/aldervall/Voice-to-Claude-CLI
+/plugin marketplace add https://github.com/aldervall/VoiceType
 ```
 
 **Step 2:** Claude Code reads `.claude-plugin/marketplace.json`
@@ -234,7 +234,7 @@ rm -rf .claude-plugin/        # Remove marketplace structure
 
 Users install directly:
 ```bash
-/plugin install https://github.com/aldervall/Voice-to-Claude-CLI
+/plugin install https://github.com/aldervall/VoiceType
 ```
 
 #### Option B: Marketplace Hosting Multiple Plugins
@@ -324,7 +324,7 @@ After fixes are implemented:
 - [ ] Fresh system: `bash scripts/install.sh` completes successfully
 - [ ] whisper.cpp server starts automatically
 - [ ] All systemd services created and enabled
-- [ ] Commands work: `voiceclaudecli-daemon`, `voiceclaudecli-input`
+- [ ] Commands work: `voicetype-daemon`, `voicetype-input`
 
 ### Installation - Error Scenarios
 - [ ] Missing `git`: Script shows helpful error message (doesn't crash silently)

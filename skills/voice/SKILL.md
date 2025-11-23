@@ -21,21 +21,21 @@ Use this skill when the user:
 ## Automatic Setup
 
 The transcription script now includes:
-- **Installation detection** - Checks if Voice-to-Claude-CLI is properly installed
+- **Installation detection** - Checks if VoiceType is properly installed
 - **Auto-start** - Automatically starts whisper.cpp server if not running
 
 If the script detects missing installation, it will return JSON with `"installation_needed": true`. When you see this:
 
 1. **Offer to run installation:**
    ```
-   "It looks like Voice-to-Claude-CLI isn't fully installed. Would you like me to run the installer? I can do this with: /voice-install"
+   "It looks like VoiceType isn't fully installed. Would you like me to run the installer? I can do this with: /voicetype-install"
    ```
 
 2. **If user agrees, run:**
    ```bash
    bash install.sh
    ```
-   Or use the `/voice-install` command which provides guided installation.
+   Or use the `/voicetype-install` command which provides guided installation.
 
 ## Prerequisites (Automatic)
 
@@ -54,7 +54,7 @@ You don't need to manually check the server - the script does it!
    ```
 
    The script automatically:
-   - ✅ Checks installation (offers /voice-install if needed)
+   - ✅ Checks installation (offers /voicetype-install if needed)
    - ✅ Starts whisper server if not running
    - ✅ Records audio from microphone for specified duration (default 5 seconds)
    - ✅ Transcribes via local whisper.cpp server (localhost:2022)
@@ -67,8 +67,8 @@ You don't need to manually check the server - the script does it!
 
 3. **Handle installation_needed:**
    If JSON contains `"installation_needed": true`:
-   - Inform user: "Voice-to-Claude-CLI needs to be installed first."
-   - Offer: "Would you like me to run the installer? Use: /voice-install or I can run: bash install.sh"
+   - Inform user: "VoiceType needs to be installed first."
+   - Offer: "Would you like me to run the installer? Use: /voicetype-install or I can run: bash install.sh"
    - Wait for user confirmation before proceeding
 
 ## Example Usage Flows
@@ -89,10 +89,10 @@ You don't need to manually check the server - the script does it!
 
 **Assistant:**
 1. Runs transcription script
-2. Receives: `{"error": "Voice-to-Claude-CLI is not fully installed", "installation_needed": true, "missing_components": ["Python venv", "whisper.cpp binary"]}`
-3. Responds: "It looks like Voice-to-Claude-CLI isn't installed yet. Would you like me to run the installer? I can guide you through it with: /voice-install or directly run: bash install.sh"
+2. Receives: `{"error": "VoiceType is not fully installed", "installation_needed": true, "missing_components": ["Python venv", "whisper.cpp binary"]}`
+3. Responds: "It looks like VoiceType isn't installed yet. Would you like me to run the installer? I can guide you through it with: /voicetype-install or directly run: bash install.sh"
 4. User confirms
-5. Runs `/voice-install` or `bash install.sh`
+5. Runs `/voicetype-install` or `bash install.sh`
 6. After installation: "Installation complete! Now let's try voice transcription..."
 
 ## Script Options
@@ -119,7 +119,7 @@ If transcription fails:
 
 3. **Test the script directly:**
    ```bash
-   cd /home/amdvall/projects/voice-to-claude-cli
+   cd /path/to/voicetype
    source venv/bin/activate
    python skills/voice/scripts/transcribe.py
    ```

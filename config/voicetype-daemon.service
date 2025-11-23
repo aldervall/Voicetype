@@ -1,12 +1,12 @@
 [Unit]
-Description=Voice-to-Claude-CLI Hold-to-Speak Daemon
+Description=VoiceType Hold-to-Speak Daemon
 After=default.target
 
 [Service]
 Type=simple
 # NOTE: This path will be automatically configured by install.sh
-# For manual installation, replace with actual path to voiceclaudecli-daemon
-ExecStart=%h/.local/bin/voiceclaudecli-daemon
+# For manual installation, replace with actual path to voicetype-daemon
+ExecStart=%h/.local/bin/voicetype-daemon
 Restart=on-failure
 RestartSec=5
 

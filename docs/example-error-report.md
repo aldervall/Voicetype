@@ -1,4 +1,4 @@
-# Voice-to-Claude-CLI Installation Error Report
+# VoiceType Installation Error Report
 
 **Generated:** 2024-01-15 10:23:45 UTC
 **Report ID:** 20240115-102345

@@ -1,4 +1,4 @@
-# Advanced Usage - Voice-to-Claude-CLI
+# Advanced Usage - VoiceType
 
 This document covers advanced usage scenarios, command-line tools, customization options, and standalone installation without Claude Code.
 
@@ -7,8 +7,8 @@ This document covers advanced usage scenarios, command-line tools, customization
 If you're not using Claude Code or want to install manually:
 
 ```bash
-git clone https://github.com/aldervall/Voice-to-Claude-CLI
-cd Voice-to-Claude-CLI
+git clone https://github.com/aldervall/VoiceType
+cd VoiceType
 bash scripts/install.sh
 ```
 
@@ -24,12 +24,12 @@ The installer will:
 
 After installation, these commands are available in `~/.local/bin/`:
 
-### voiceclaudecli-daemon
+### voicetype-daemon
 
 Start the F12 hold-to-speak daemon:
 
 ```bash
-voiceclaudecli-daemon
+voicetype-daemon
 ```
 
 **What it does:**
@@ -41,27 +41,27 @@ voiceclaudecli-daemon
 **Usage:**
 ```bash
 # Start manually
-voiceclaudecli-daemon
+voicetype-daemon
 
 # Start as systemd service (recommended)
-systemctl --user start voiceclaudecli-daemon
+systemctl --user start voicetype-daemon
 
 # Enable auto-start on login
-systemctl --user enable voiceclaudecli-daemon
+systemctl --user enable voicetype-daemon
 
 # Check status
-systemctl --user status voiceclaudecli-daemon
+systemctl --user status voicetype-daemon
 
 # View logs
-journalctl --user -u voiceclaudecli-daemon -f
+journalctl --user -u voicetype-daemon -f
 ```
 
-### voiceclaudecli-input
+### voicetype-input
 
 One-shot voice input that types into the active window:
 
 ```bash
-voiceclaudecli-input
+voicetype-input
 ```
 
 **What it does:**
@@ -73,20 +73,20 @@ voiceclaudecli-input
 **Usage:**
 ```bash
 # Run once
-voiceclaudecli-input
+voicetype-input
 
 # Bind to a hotkey in your desktop environment
 # KDE example: System Settings → Shortcuts → Custom Shortcuts
-#   Command: /home/username/.local/bin/voiceclaudecli-input
+#   Command: /home/username/.local/bin/voicetype-input
 #   Shortcut: Meta+V
 ```
 
-### voiceclaudecli-interactive
+### voicetype-interactive
 
 Interactive terminal transcription mode:
 
 ```bash
-voiceclaudecli-interactive
+voicetype-interactive
 ```
 
 **What it does:**
@@ -99,7 +99,7 @@ voiceclaudecli-interactive
 **Usage:**
 ```bash
 # Start interactive session
-voiceclaudecli-interactive
+voicetype-interactive
 
 # Press ENTER to record
 # Press Ctrl+C to exit
@@ -130,14 +130,14 @@ Claude will autonomously activate voice transcription.
 Edit the daemon service file:
 
 ```bash
-nano ~/.config/systemd/user/voiceclaudecli-daemon.service
+nano ~/.config/systemd/user/voicetype-daemon.service
 ```
 
 Find the `ExecStart` line and add parameters:
 
 ```ini
 [Service]
-ExecStart=/home/username/.local/bin/voiceclaudecli-daemon --key KEY_F11
+ExecStart=/home/username/.local/bin/voicetype-daemon --key KEY_F11
 ```
 
 Available key codes (from evdev):
@@ -149,7 +149,7 @@ Available key codes (from evdev):
 After changes:
 ```bash
 systemctl --user daemon-reload
-systemctl --user restart voiceclaudecli-daemon
+systemctl --user restart voicetype-daemon
 ```
 
 ### Recording Duration
@@ -169,12 +169,12 @@ DURATION = 10  # Change to 10 seconds
 
 Restart the daemon:
 ```bash
-systemctl --user restart voiceclaudecli-daemon
+systemctl --user restart voicetype-daemon
 ```
 
 ### Audio Beeps
 
-Voice-to-Claude-CLI provides audio feedback when you start/stop recording. You can choose between **WAV files** (custom sounds) or **frequency tones** (simple beeps).
+VoiceType provides audio feedback when you start/stop recording. You can choose between **WAV files** (custom sounds) or **frequency tones** (simple beeps).
 
 #### Using WAV Files (Custom Sounds)
 
@@ -197,7 +197,7 @@ Voice-to-Claude-CLI provides audio feedback when you start/stop recording. You c
 
 3. Restart the daemon:
    ```bash
-   systemctl --user restart voiceclaudecli-daemon
+   systemctl --user restart voicetype-daemon
    ```
 
 **WAV file requirements:**
@@ -239,7 +239,7 @@ BEEP_ENABLED = False  # Completely silent mode
 
 After any changes, restart the daemon:
 ```bash
-systemctl --user restart voiceclaudecli-daemon
+systemctl --user restart voicetype-daemon
 ```
 
 ### Desktop Notifications
@@ -266,13 +266,13 @@ NOTIFICATION_TIMEOUT = 5000  # milliseconds (5 seconds)
 1. System Settings → Shortcuts → Custom Shortcuts
 2. Click "Edit" → "New" → "Global Shortcut" → "Command/URL"
 3. Trigger: Set your desired key (e.g., Meta+V)
-4. Action: `/home/username/.local/bin/voiceclaudecli-input`
+4. Action: `/home/username/.local/bin/voicetype-input`
 
 **GNOME:**
 1. Settings → Keyboard → Keyboard Shortcuts
 2. Click "+" to add custom shortcut
 3. Name: Voice Input
-4. Command: `/home/username/.local/bin/voiceclaudecli-input`
+4. Command: `/home/username/.local/bin/voicetype-input`
 5. Set shortcut: Choose your key combination
 
 **i3/Sway:**
@@ -280,7 +280,7 @@ NOTIFICATION_TIMEOUT = 5000  # milliseconds (5 seconds)
 Add to your config file:
 
 ```
-bindsym $mod+v exec /home/username/.local/bin/voiceclaudecli-input
+bindsym $mod+v exec /home/username/.local/bin/voicetype-input
 ```
 
 ### Use in Scripts
@@ -290,7 +290,7 @@ bindsym $mod+v exec /home/username/.local/bin/voiceclaudecli-input
 # Transcribe and save to file
 cd /path/to/voice-to-claude-cli
 source venv/bin/activate
-TRANSCRIPTION=$(python -m src.voice_to_claude --once)
+TRANSCRIPTION=$(python -m src.voice_type --once)
 echo "$TRANSCRIPTION" >> notes.txt
 ```
 
@@ -300,7 +300,7 @@ echo "$TRANSCRIPTION" >> notes.txt
 # Transcribe and use in pipeline
 cd /path/to/voice-to-claude-cli
 source venv/bin/activate
-python -m src.voice_to_claude --once | xargs -I {} echo "User said: {}"
+python -m src.voice_type --once | xargs -I {} echo "User said: {}"
 ```
 
 ## Development
@@ -312,7 +312,7 @@ cd /path/to/voice-to-claude-cli
 source venv/bin/activate
 
 # Interactive mode
-python -m src.voice_to_claude
+python -m src.voice_type
 
 # Hold-to-speak daemon
 python -m src.voice_holdtospeak
@@ -400,8 +400,8 @@ bash scripts/uninstall.sh --keep-data
 
 **Always Removed:**
 - ✅ Systemd services (daemon, whisper-server)
-- ✅ Launcher scripts (~/.local/bin/voiceclaudecli-*)
-- ✅ Installation directory (~/.local/voiceclaudecli)
+- ✅ Launcher scripts (~/.local/bin/voicetype-*)
+- ✅ Installation directory (~/.local/voicetype)
 - ✅ Temporary build artifacts (/tmp/whisper.cpp)
 - ✅ Running processes
 
@@ -419,27 +419,27 @@ If you prefer to uninstall manually or the script doesn't work:
 
 **1. Stop Services:**
 ```bash
-systemctl --user stop voiceclaudecli-daemon whisper-server
-systemctl --user disable voiceclaudecli-daemon whisper-server
+systemctl --user stop voicetype-daemon whisper-server
+systemctl --user disable voicetype-daemon whisper-server
 pkill -f voice_holdtospeak
 pkill -f whisper-server
 ```
 
 **2. Remove Service Files:**
 ```bash
-rm ~/.config/systemd/user/voiceclaudecli-daemon.service
+rm ~/.config/systemd/user/voicetype-daemon.service
 rm ~/.config/systemd/user/whisper-server.service
 systemctl --user daemon-reload
 ```
 
 **3. Remove Launcher Scripts:**
 ```bash
-rm ~/.local/bin/voiceclaudecli-*
+rm ~/.local/bin/voicetype-*
 ```
 
 **4. Remove Installation Directories:**
 ```bash
-rm -rf ~/.local/voiceclaudecli
+rm -rf ~/.local/voicetype
 rm -rf /tmp/whisper.cpp
 ```
 
@@ -481,8 +481,8 @@ bash scripts/install.sh
 
 **If you removed everything:**
 ```bash
-git clone https://github.com/aldervall/Voice-to-Claude-CLI.git
-cd Voice-to-Claude-CLI
+git clone https://github.com/aldervall/VoiceType.git
+cd VoiceType
 bash scripts/install.sh
 ```
 
@@ -496,17 +496,17 @@ See main [README.md](README.md#troubleshooting) for common issues.
 
 ```bash
 # Edit daemon service
-nano ~/.config/systemd/user/voiceclaudecli-daemon.service
+nano ~/.config/systemd/user/voicetype-daemon.service
 
 # Change ExecStart line
-ExecStart=/home/username/.local/bin/voiceclaudecli-daemon --verbose
+ExecStart=/home/username/.local/bin/voicetype-daemon --verbose
 
 # Reload and restart
 systemctl --user daemon-reload
-systemctl --user restart voiceclaudecli-daemon
+systemctl --user restart voicetype-daemon
 
 # View verbose logs
-journalctl --user -u voiceclaudecli-daemon -f
+journalctl --user -u voicetype-daemon -f
 ```
 
 **Test audio recording:**
@@ -514,7 +514,7 @@ journalctl --user -u voiceclaudecli-daemon -f
 ```bash
 cd /path/to/voice-to-claude-cli
 source venv/bin/activate
-python -c "from src.voice_to_claude import VoiceTranscriber; vt = VoiceTranscriber(); audio = vt.record_audio(3); print('Recording successful:', len(audio))"
+python -c "from src.voice_type import VoiceTranscriber; vt = VoiceTranscriber(); audio = vt.record_audio(3); print('Recording successful:', len(audio))"
 ```
 
 **Test whisper.cpp transcription:**
@@ -522,14 +522,14 @@ python -c "from src.voice_to_claude import VoiceTranscriber; vt = VoiceTranscrib
 ```bash
 cd /path/to/voice-to-claude-cli
 source venv/bin/activate
-python -c "from src.voice_to_claude import VoiceTranscriber; vt = VoiceTranscriber(); audio = vt.record_audio(3); print(vt.transcribe_audio(audio))"
+python -c "from src.voice_type import VoiceTranscriber; vt = VoiceTranscriber(); audio = vt.record_audio(3); print(vt.transcribe_audio(audio))"
 ```
 
 ## Privacy & Error Reporting
 
 ### Privacy-First Design
 
-Voice-to-Claude-CLI is designed with **privacy as the foundation**:
+VoiceType is designed with **privacy as the foundation**:
 
 - ✅ **100% Local Processing** - All voice transcription happens on your computer
 - ✅ **No Cloud Services** - Zero API calls to external servers
@@ -654,4 +654,4 @@ Error reports help us:
 - **[README.md](README.md)** - Main documentation
 - **[CLAUDE.md](CLAUDE.md)** - Developer guide and architecture
 - **[HANDOVER.md](HANDOVER.md)** - Development history
-- **[GitHub Issues](https://github.com/aldervall/Voice-to-Claude-CLI/issues)** - Report bugs
+- **[GitHub Issues](https://github.com/aldervall/VoiceType/issues)** - Report bugs

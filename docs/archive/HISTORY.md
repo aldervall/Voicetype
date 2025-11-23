@@ -1,4 +1,4 @@
-# Voice-to-Claude-CLI Development History (Sessions 1-9)
+# VoiceType Development History (Sessions 1-9)
 
 This file contains the archived development history for Sessions 1-9. For current development context, see HANDOVER.md.
 
@@ -68,9 +68,9 @@ This file contains the archived development history for Sessions 1-9. For curren
 - Adds user to `input` group (with logout reminder)
 - Creates Python venv and installs dependencies
 - Creates launcher scripts in `~/.local/bin`:
-  - `voiceclaudecli-daemon`
-  - `voiceclaudecli-input`
-  - `voiceclaudecli-interactive`
+  - `voicetype-daemon`
+  - `voicetype-input`
+  - `voicetype-interactive`
 - Installs systemd services with correct paths
 - Optionally installs whisper.cpp
 - Color-coded output with progress indicators

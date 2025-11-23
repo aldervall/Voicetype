@@ -1,8 +1,8 @@
 ---
-description: Install Voice-to-Claude-CLI with automated setup for your system
+description: Install VoiceType with automated setup for your system
 ---
 
-You are helping the user install Voice-to-Claude-CLI, a local voice transcription tool.
+You are helping the user install VoiceType, a local voice transcription tool.
 
 ## Installation Steps
 
@@ -42,14 +42,14 @@ If the installer adds the user to the `input` group, they MUST log out and log b
 **3. Verify installation:**
 ```bash
 curl http://127.0.0.1:2022/health
-systemctl --user status voiceclaudecli-daemon
+systemctl --user status voicetype-daemon
 ```
 
 ## Usage After Installation
 
 - **Hold-to-speak:** Press and hold F12, speak, then release
 - **Quick voice input:** Use `/voice` command in Claude
-- **Interactive mode:** Run `voiceclaudecli-interactive`
+- **Interactive mode:** Run `voicetype-interactive`
 
 ## Notes
 

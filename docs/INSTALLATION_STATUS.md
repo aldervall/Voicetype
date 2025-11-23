@@ -4,7 +4,7 @@
 
 ## Executive Summary
 
-The Voice-to-Claude-CLI installation flow has been **completely documented and verified**. All architectural issues have been identified and fixed. The installation flow is now **production-ready** with comprehensive error handling and user guidance.
+The VoiceType installation flow has been **completely documented and verified**. All architectural issues have been identified and fixed. The installation flow is now **production-ready** with comprehensive error handling and user guidance.
 
 ---
 
@@ -142,7 +142,7 @@ The plugin installation has old versions of scripts. Options:
 rm -rf ~/.claude/plugins/marketplaces/voice-to-claude-marketplace
 
 # In Claude Code
-/plugin → Add Marketplace → aldervall/Voice-to-Claude-CLI
+/plugin → Add Marketplace → aldervall/VoiceType
 # Then enable and install again
 ```
 

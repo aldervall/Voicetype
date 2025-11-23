@@ -2,7 +2,7 @@
 
 ## Overview
 
-This document provides a comprehensive checklist for verifying the Voice-to-Claude-CLI installation flow works correctly from start to finish. Use this when testing changes to installation scripts or plugin configuration.
+This document provides a comprehensive checklist for verifying the VoiceType installation flow works correctly from start to finish. Use this when testing changes to installation scripts or plugin configuration.
 
 ## Prerequisites Check
 
@@ -20,7 +20,7 @@ Before starting installation testing:
 **User Actions:**
 1. Run `/plugin` in Claude Code
 2. Select "Add Marketplace"
-3. Enter `aldervall/Voice-to-Claude-CLI`
+3. Enter `aldervall/VoiceType`
 4. Press Enter/Submit
 
 **Expected Results:**
@@ -153,13 +153,13 @@ ls ~/.claude/plugins/marketplaces/voice-to-claude-marketplace/commands/
 - [ ] Warns about logout/login requirement
 
 **Step 5/7: Launcher Scripts**
-- [ ] Creates `~/.local/bin/voiceclaudecli-input`
-- [ ] Creates `~/.local/bin/voiceclaudecli-daemon`
+- [ ] Creates `~/.local/bin/voicetype-input`
+- [ ] Creates `~/.local/bin/voicetype-daemon`
 - [ ] Makes scripts executable
 - [ ] Verifies `~/.local/bin` in PATH
 
 **Step 6/7: Systemd Services**
-- [ ] Creates daemon service: `~/.config/systemd/user/voiceclaudecli-daemon.service`
+- [ ] Creates daemon service: `~/.config/systemd/user/voicetype-daemon.service`
 - [ ] Reloads systemd daemon
 - [ ] Service file has correct paths
 
@@ -205,7 +205,7 @@ systemctl --user status ydotool
 3. **Python Environment Works**
 ```bash
 source ~/.claude/plugins/marketplaces/voice-to-claude-marketplace/venv/bin/activate
-python -c "from src.voice_to_claude import VoiceTranscriber; print('✓ Imports work')"
+python -c "from src.voice_type import VoiceTranscriber; print('✓ Imports work')"
 ```
 
 4. **Platform Detection Works**
@@ -218,8 +218,8 @@ python -m src.platform_detect
 
 5. **Daemon Can Start**
 ```bash
-systemctl --user start voiceclaudecli-daemon
-systemctl --user status voiceclaudecli-daemon
+systemctl --user start voicetype-daemon
+systemctl --user status voicetype-daemon
 # Expected: Active (running)
 ```
 
@@ -247,18 +247,18 @@ Test actual voice transcription functionality.
 ```bash
 cd ~/.claude/plugins/marketplaces/voice-to-claude-marketplace
 source venv/bin/activate
-python -m src.voice_to_claude
+python -m src.voice_type
 # Press ENTER, speak, verify transcription appears
 ```
 
 **Test 2: One-Shot Mode**
 ```bash
-voiceclaudecli-input
+voicetype-input
 # Should record 5s, type transcription into active window
 ```
 
 **Test 3: Daemon Mode (F12 Hold-to-Speak)**
-1. Ensure daemon running: `systemctl --user status voiceclaudecli-daemon`
+1. Ensure daemon running: `systemctl --user status voicetype-daemon`
 2. Hover over any text field
 3. Hold F12, speak, release
 4. Verify transcription appears in text field
@@ -354,7 +354,7 @@ Installation flow is considered successful when:
    - Verify error messages helpful
 
 3. **Python Code Changes (src/*):**
-   - Restart daemon: `systemctl --user restart voiceclaudecli-daemon`
+   - Restart daemon: `systemctl --user restart voicetype-daemon`
    - Test all modes work
    - Check no import errors
 
@@ -399,7 +399,7 @@ Ideally test on:
 │   ├── install.sh
 │   └── install-whisper.sh
 ├── src/
-│   ├── voice_to_claude.py
+│   ├── voice_type.py
 │   ├── platform_detect.py
 │   ├── voice_holdtospeak.py
 │   └── voice_to_text.py
@@ -419,11 +419,11 @@ Ideally test on:
 **User-Installed Files:**
 ```
 ~/.local/bin/
-├── voiceclaudecli-input
-└── voiceclaudecli-daemon
+├── voicetype-input
+└── voicetype-daemon
 
 ~/.config/systemd/user/
-├── voiceclaudecli-daemon.service
+├── voicetype-daemon.service
 └── whisper-server.service
 ```
 

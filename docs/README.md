@@ -1,6 +1,8 @@
-# Voice-to-Claude-CLI
+# VoiceType
 
-Local voice transcription for Claude Code using whisper.cpp. 100% private - no API keys or cloud services required.
+Local voice transcription using whisper.cpp. 100% private - no API keys or cloud services required. Type with your voice into any application!
+
+> **Note:** This was previously called Voice-to-Claude-CLI. The new name reflects that this tool works with ANY application, not just Claude Code.
 
 > **🎤 QUICK START:** Hover over Claude Code, hold **F12**, speak, release. Your transcribed text appears directly in the Claude CLI input!
 
@@ -17,7 +19,7 @@ Open Claude Code and run:
 
 Select "Add Marketplace" and enter:
 ```
-aldervall/Voice-to-Claude-CLI
+aldervall/VoiceType
 ```
 
 ![Add Marketplace](docs/images/Plugin.AddMarket.png)
@@ -32,7 +34,7 @@ After installation, go back to `/plugin`, select "Manage plugins", find `voice`,
 
 **Step 3: Run the installer**
 ```bash
-/voice-claudecli-install
+/voicetype-install
 ```
 
 That's it! The installer shows beautiful progress indicators and progress bars for the ~142MB model download.
@@ -42,9 +44,9 @@ That's it! The installer shows beautiful progress indicators and progress bars f
 Once installed, you have three slash commands available in Claude Code:
 
 ```bash
-/voice-claudecli-install    # Install voice transcription system
-/voice-claudecli-uninstall  # Complete removal of everything
-/voice-claudecli            # Quick voice input (one-shot transcription)
+/voicetype-install    # Install voice transcription system
+/voicetype-uninstall  # Complete removal of everything
+/voicetype            # Quick voice input (one-shot transcription)
 ```
 
 ## Usage
@@ -64,7 +66,7 @@ The whisper.cpp server **auto-starts on first F12 press** and stays running unti
 
 ```bash
 # Stop whisper.cpp to free up resources
-voiceclaudecli-stop-server
+voicetype-stop-server
 
 # Check if whisper is running
 curl http://127.0.0.1:2022/health
@@ -78,7 +80,7 @@ Complete removal of everything:
 
 ```bash
 # From Claude Code
-/voice-claudecli-uninstall
+/voicetype-uninstall
 
 # Or from terminal (interactive - prompts for each item)
 bash scripts/uninstall.sh
@@ -114,7 +116,7 @@ bash scripts/uninstall.sh --keep-data
 - **📚 [Complete Documentation Index](docs/INDEX.md)** - Find everything you need
 - **🔧 [Advanced Usage](docs/ADVANCED.md)** - Customization, hotkeys, scripting
 - **💻 [Developer Guide](docs/CLAUDE.md)** - Architecture, troubleshooting, contributing
-- **🐛 [GitHub Issues](https://github.com/aldervall/Voice-to-Claude-CLI/issues)** - Report bugs or request features
+- **🐛 [GitHub Issues](https://github.com/aldervall/VoiceType/issues)** - Report bugs or request features
 
 ## License
 

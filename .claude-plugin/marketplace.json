@@ -1,24 +1,24 @@
 {
-  "name": "voice-to-claude-marketplace",
+  "name": "voicetype-marketplace",
   "owner": {
-    "name": "Voice-to-Claude-CLI",
+    "name": "VoiceType",
     "url": "https://github.com/aldervall/Voice-to-Claude-CLI"
   },
   "metadata": {
-    "description": "Local voice transcription for Claude Code using whisper.cpp",
-    "version": "1.3.0",
+    "description": "VoiceType - Local voice transcription using whisper.cpp",
+    "version": "2.0.0",
     "homepage": "https://github.com/aldervall/Voice-to-Claude-CLI",
     "pluginRoot": "./",
     "totalPlugins": 1,
     "skillsEnabled": 1,
-    "lastUpdated": "2025-11-17"
+    "lastUpdated": "2025-11-24"
   },
   "plugins": [
     {
-      "name": "voice",
+      "name": "voicetype",
       "source": "./",
-      "description": "Local voice-to-text transcription using whisper.cpp with privacy-first design. Record and transcribe speech completely offline with no API keys or cloud services required.",
-      "version": "1.3.0",
+      "description": "VoiceType - Local voice transcription using whisper.cpp with privacy-first design. Type with your voice into any application completely offline with no API keys or cloud services required.",
+      "version": "2.0.0",
       "category": "productivity",
       "keywords": [
         "voice",

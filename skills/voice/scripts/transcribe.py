@@ -16,7 +16,7 @@ project_root = os.path.abspath(os.path.join(script_dir, '../../..'))
 sys.path.insert(0, project_root)
 
 try:
-    from src.voice_to_claude import VoiceTranscriber
+    from src.voice_type import VoiceTranscriber
     import requests
     import subprocess
     import time
@@ -30,7 +30,7 @@ except ImportError as e:
 
 def check_installation():
     """
-    Check if Voice-to-Claude-CLI is properly installed.
+    Check if VoiceType is properly installed.
     Returns (is_installed, missing_components)
     """
     missing = []
@@ -126,12 +126,12 @@ def main():
     is_installed, missing = check_installation()
     if not is_installed:
         print(json.dumps({
-            "error": "Voice-to-Claude-CLI is not fully installed",
+            "error": "VoiceType is not fully installed",
             "missing_components": missing,
             "installation_needed": True,
             "help": [
                 "Run installation: bash install.sh",
-                "Or use Claude command: /voice-install",
+                "Or use Claude command: /voicetype-install",
                 f"Missing: {', '.join(missing)}"
             ]
         }))

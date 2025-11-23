@@ -11,7 +11,7 @@
 
 **Python Source Code:**
 - `src/__init__.py` - Package initialization
-- `src/voice_to_claude.py` - Core VoiceTranscriber class (used by all modes)
+- `src/voice_type.py` - Core VoiceTranscriber class (used by all modes)
 - `src/platform_detect.py` - Cross-platform abstraction layer
 - `src/voice_holdtospeak.py` - Daemon mode (F12 hotkey)
 - `src/voice_to_text.py` - One-shot mode
@@ -85,7 +85,7 @@
 - `src/__pycache__/` - Python bytecode cache
   - `__init__.cpython-313.pyc`
   - `platform_detect.cpython-313.pyc`
-  - `voice_to_claude.cpython-313.pyc`
+  - `voice_type.cpython-313.pyc`
   - **Status:** Already in .gitignore ✅
   - **Action:** None (auto-generated)
 
@@ -214,7 +214,7 @@ The project structure is **excellent as-is**. Reasons:
 3. `INSTALLATION_STATUS.md` - Current testing status
 
 **Code Navigation:**
-1. `src/voice_to_claude.py` - Core transcription logic
+1. `src/voice_type.py` - Core transcription logic
 2. `src/platform_detect.py` - Cross-platform layer
 3. `scripts/install.sh` - Installation flow
 

@@ -1,4 +1,4 @@
-# Handover - Voice-to-Claude-CLI
+# Handover - VoiceType
 
 **Last Updated:** 2025-11-18 (Session 30)
 **Current Status:** ✅ Production Ready - v1.3.0+
@@ -105,8 +105,8 @@
 **Tests Performed:**
 1. ✅ Created sounds/ directory - `ls -lh sounds/` shows 56K start.wav
 2. ✅ Updated Python code - All 3 sections modified correctly
-3. ✅ Restarted daemon - `systemctl --user restart voiceclaudecli-daemon` successful
-4. ✅ Daemon running - `systemctl --user is-active voiceclaudecli-daemon` returns "active"
+3. ✅ Restarted daemon - `systemctl --user restart voicetype-daemon` successful
+4. ✅ Daemon running - `systemctl --user is-active voicetype-daemon` returns "active"
 5. ✅ Whisper server healthy - `curl http://127.0.0.1:2022/health` returns {"status":"ok"}
 6. ✅ WAV playback works - `paplay sounds/start.wav` plays successfully
 7. ✅ Documentation updated - ADVANCED.md has comprehensive guide
@@ -258,7 +258,7 @@ Problem: "Voice input not working"
 - Grouped by category (Core Transcription, Platform Abstraction, Daemon Mode, One-Shot, Claude Integration, Installation, Configuration)
 
 **Examples:**
-- `src/voice_to_claude.py` → Shows that `record_audio()`, `transcribe_audio()`, and constants affect all 4 modes
+- `src/voice_type.py` → Shows that `record_audio()`, `transcribe_audio()`, and constants affect all 4 modes
 - `src/platform_detect.py` → Shows `copy_to_clipboard()` affects daemon, `type_text()` affects one-shot, etc.
 - `src/voice_holdtospeak.py` → Sub-components: StreamingRecorder, handle_key_event, ensure_whisper_server, beeps/notifications
 
@@ -327,14 +327,14 @@ PHASE 4: User Groups
     └── Required for /dev/input/* access, takes effect after logout/login
 
 PHASE 5: Launcher Scripts
-    ├── voiceclaudecli-daemon (daemon launcher)
-    ├── voiceclaudecli-input (one-shot launcher)
-    └── voiceclaudecli-stop-server (server shutdown)
+    ├── voicetype-daemon (daemon launcher)
+    ├── voicetype-input (one-shot launcher)
+    └── voicetype-stop-server (server shutdown)
 
 PHASE 6: Systemd Services
-    ├── voiceclaudecli-daemon.service
+    ├── voicetype-daemon.service
     ├── systemctl --user daemon-reload
-    └── systemctl --user enable voiceclaudecli-daemon
+    └── systemctl --user enable voicetype-daemon
 
 PHASE 7: whisper.cpp
     ├── Check .whisper/bin/whisper-server-linux-x64
@@ -347,8 +347,8 @@ PHASE 7: whisper.cpp
 - Shows exactly what gets created in each phase
 - Phase 2: `venv/` directory
 - Phase 3: `venv/lib/python3.x/site-packages/` populated
-- Phase 5: `~/.local/bin/voiceclaudecli-*` scripts
-- Phase 6: `~/.config/systemd/user/voiceclaudecli-daemon.service`
+- Phase 5: `~/.local/bin/voicetype-*` scripts
+- Phase 6: `~/.config/systemd/user/voicetype-daemon.service`
 - Phase 7: `.whisper/bin/whisper-server-linux-x64`, `.whisper/models/ggml-base.en.bin`
 
 **Benefits:**
@@ -454,8 +454,8 @@ PHASE 7: whisper.cpp
 1. Stop all services (daemon, whisper-server)
 2. Disable systemd services
 3. Remove service files (~/.config/systemd/user/)
-4. Remove launcher scripts (~/.local/bin/voiceclaudecli-*)
-5. Remove installation directories (~/.local/voiceclaudecli, /tmp/whisper.cpp)
+4. Remove launcher scripts (~/.local/bin/voicetype-*)
+5. Remove installation directories (~/.local/voicetype, /tmp/whisper.cpp)
 6. Final cleanup (logs, temp files)
 
 **Steps 7-9 (Optional - User Choice):**
@@ -845,7 +845,7 @@ generate_error_report 1 "TEST" "Error output"
 3. ✅ **Created comprehensive uninstall script** - 6-step cleanup process
 4. ✅ **Refactored install-whisper.sh** - Uses ONLY pre-built binaries (no /tmp builds)
 5. ✅ **Fixed install.sh bugs** - Sudo TTY detection, line 251 syntax error
-6. ✅ **Added stop-server command** - `voiceclaudecli-stop-server` for resource management
+6. ✅ **Added stop-server command** - `voicetype-stop-server` for resource management
 7. ✅ **Updated all documentation** - CLAUDE.md, README.md with new workflow
 
 ### Changes Made
@@ -857,11 +857,11 @@ generate_error_report 1 "TEST" "Error output"
 - Stops and disables all systemd services
 - Kills running processes
 - Removes service files, launcher scripts, installation directories
-- Cleans up `/tmp/whisper.cpp` and `~/.local/voiceclaudecli`
+- Cleans up `/tmp/whisper.cpp` and `~/.local/voicetype`
 - Interactive confirmation (can run non-interactively)
 - Shows disk space recovered
 
-**2. voiceclaudecli-stop-server launcher** (Added to install.sh:347-371)
+**2. voicetype-stop-server launcher** (Added to install.sh:347-371)
 - New command to stop whisper.cpp manually
 - Saves system resources when voice input not in use
 - Graceful shutdown with verification
@@ -882,12 +882,12 @@ generate_error_report 1 "TEST" "Error output"
 - **Fixed sudo handling:** Added TTY detection before usermod (lines 243-259)
 - **Fixed ydotool service:** Graceful failure with warnings instead of blocking (lines 218-225)
 - **Added stop-server:** New launcher script creation (lines 347-371)
-- **Updated output:** Added voiceclaudecli-stop-server to commands list (line 477)
+- **Updated output:** Added voicetype-stop-server to commands list (line 477)
 
 **3. docs/CLAUDE.md** (Documentation updates)
 - **Updated whisper.cpp Server Requirements section** (lines 200-228):
   - Documented resource-efficient manual shutdown design
-  - Added voiceclaudecli-stop-server command
+  - Added voicetype-stop-server command
   - Noted NO auto-start on boot behavior
   - Explained ~213ms startup time
   - Removed `/tmp/whisper.cpp` fallback reference
@@ -898,7 +898,7 @@ generate_error_report 1 "TEST" "Error output"
 **4. docs/README.md** (User guide updates)
 - **Added Resource Management section** (lines 51-63):
   - Explains auto-start on first F12 press
-  - Documents voiceclaudecli-stop-server command
+  - Documents voicetype-stop-server command
   - Explains rationale (lightweight system)
   - Notes ~213ms startup (no convenience trade-off)
 - **Updated Usage** (line 45):
@@ -942,7 +942,7 @@ generate_error_report 1 "TEST" "Error output"
 **Resource Efficiency Achieved:**
 - whisper.cpp no longer runs 24/7
 - Auto-starts on first F12 press (~213ms delay)
-- Manual shutdown via `voiceclaudecli-stop-server`
+- Manual shutdown via `voicetype-stop-server`
 - Zero impact on user experience (startup nearly instant)
 - Saves ~290 MB RAM when not in use
 
@@ -1034,7 +1034,7 @@ generate_error_report 1 "TEST" "Error output"
 **Release Details:**
 - **Title:** "v1.3.0 - Documentation Excellence"
 - **Status:** Marked as "Latest" ✅
-- **URL:** https://github.com/aldervall/Voice-to-Claude-CLI/releases/tag/v1.3.0
+- **URL:** https://github.com/aldervall/VoiceType/releases/tag/v1.3.0
 
 **Release Highlights:**
 - Sessions 22-23 documentation improvements
@@ -1078,7 +1078,7 @@ v1.1.0 - Installation Fixes
 
 ### What Is This Project?
 
-**Voice-to-Claude-CLI** provides **100% local voice transcription** using whisper.cpp. No API keys, no cloud services - your voice never leaves your computer.
+**VoiceType** provides **100% local voice transcription** using whisper.cpp. No API keys, no cloud services - your voice never leaves your computer.
 
 **Key Features:**
 - 🎤 F12 hold-to-speak daemon (always-on hotkey)
@@ -1098,12 +1098,12 @@ User Input → Platform Abstraction → VoiceTranscriber → whisper.cpp HTTP �
 ```
 
 **Core Components:**
-1. **VoiceTranscriber** (`src/voice_to_claude.py`) - Shared transcription logic
+1. **VoiceTranscriber** (`src/voice_type.py`) - Shared transcription logic
 2. **Platform Detection** (`src/platform_detect.py`) - Cross-platform abstraction
 3. **Three Modes:**
    - Daemon (`src/voice_holdtospeak.py`) - F12 hold-to-speak
    - One-shot (`src/voice_to_text.py`) - Single transcription
-   - Interactive (`src/voice_to_claude.py`) - Terminal mode
+   - Interactive (`src/voice_type.py`) - Terminal mode
 4. **Claude Skill** (`skills/voice/`) - Autonomous voice transcription
 5. **Installation** (`scripts/install.sh`) - 7-step automated setup
 
@@ -1119,7 +1119,7 @@ User Input → Platform Abstraction → VoiceTranscriber → whisper.cpp HTTP �
 - ✅ Plugin discovery (plugin.json at root)
 - ✅ Claude Code integration (slash commands + skill)
 - ✅ Daemon mode (F12 hold-to-speak)
-- ✅ One-shot mode (voiceclaudecli-input)
+- ✅ One-shot mode (voicetype-input)
 - ✅ Interactive mode (terminal)
 - ✅ Cross-platform support (Wayland + X11)
 - ✅ systemd services (daemon + whisper-server)
@@ -1130,7 +1130,7 @@ User Input → Platform Abstraction → VoiceTranscriber → whisper.cpp HTTP �
 # One-liner verification
 curl -s http://127.0.0.1:2022/health && \
 systemctl --user is-active whisper-server ydotool && \
-ls ~/.local/bin/voiceclaudecli-* && \
+ls ~/.local/bin/voicetype-* && \
 echo "✓ System healthy"
 ```
 
@@ -1158,7 +1158,7 @@ echo "✓ System healthy"
 ```
 voice-to-claude-cli/
 ├── 📁 Core Python (src/)
-│   ├── voice_to_claude.py       # VoiceTranscriber class
+│   ├── voice_type.py       # VoiceTranscriber class
 │   ├── platform_detect.py       # Cross-platform abstraction
 │   ├── voice_holdtospeak.py     # F12 daemon mode
 │   └── voice_to_text.py         # One-shot mode
@@ -1222,17 +1222,17 @@ systemctl --user start whisper-server
 
 **Naming Inconsistency:**
 - Service file in repo: `voice-holdtospeak.service`
-- Installed service: `voiceclaudecli-daemon.service`
+- Installed service: `voicetype-daemon.service`
 - Both run: `src/voice_holdtospeak.py`
 
-**Always use:** `systemctl --user restart voiceclaudecli-daemon`
+**Always use:** `systemctl --user restart voicetype-daemon`
 
 ### After Code Changes
 
 **Always restart daemon:**
 ```bash
-systemctl --user restart voiceclaudecli-daemon
-journalctl --user -u voiceclaudecli-daemon -f  # Monitor logs
+systemctl --user restart voicetype-daemon
+journalctl --user -u voicetype-daemon -f  # Monitor logs
 ```
 
 ### Plugin Discovery
@@ -1245,10 +1245,10 @@ journalctl --user -u voiceclaudecli-daemon -f  # Monitor logs
 
 | File Modified | Requires Restart | How to Test |
 |---------------|------------------|-------------|
-| `src/voice_to_claude.py` | Daemon + Interactive + Skill | Restart daemon OR `python -m src.voice_to_claude` |
+| `src/voice_type.py` | Daemon + Interactive + Skill | Restart daemon OR `python -m src.voice_type` |
 | `src/platform_detect.py` | Daemon + One-shot | Restart daemon OR `python -m src.platform_detect` |
 | `src/voice_holdtospeak.py` | Daemon only | Restart daemon |
-| `src/voice_to_text.py` | None | Run `voiceclaudecli-input` |
+| `src/voice_to_text.py` | None | Run `voicetype-input` |
 | `skills/voice/scripts/transcribe.py` | None | Run script directly |
 
 ---
@@ -1317,7 +1317,7 @@ journalctl --user -u voiceclaudecli-daemon -f  # Monitor logs
 - Created comprehensive uninstall script (6-step cleanup)
 - Refactored install-whisper.sh (no /tmp builds, pre-built only)
 - Fixed install.sh bugs (sudo TTY, line 251 syntax)
-- Added voiceclaudecli-stop-server command
+- Added voicetype-stop-server command
 - Updated all documentation for new workflow
 
 ### Session 23 (2025-11-17) - Documentation Excellence & v1.3.0 Release ✅
@@ -1368,26 +1368,26 @@ journalctl --user -u voiceclaudecli-daemon -f  # Monitor logs
 curl http://127.0.0.1:2022/health
 
 # Check services
-systemctl --user status voiceclaudecli-daemon whisper-server ydotool
+systemctl --user status voicetype-daemon whisper-server ydotool
 
 # Check platform detection
 python -m src.platform_detect
 
 # Check Python imports
 source venv/bin/activate
-python -c "from src.voice_to_claude import VoiceTranscriber; print('✓ OK')"
+python -c "from src.voice_type import VoiceTranscriber; print('✓ OK')"
 ```
 
 ### Testing
 ```bash
 # Quick test (interactive mode)
-source venv/bin/activate && python -m src.voice_to_claude
+source venv/bin/activate && python -m src.voice_type
 
 # Test one-shot mode
-voiceclaudecli-input
+voicetype-input
 
 # Monitor daemon logs
-journalctl --user -u voiceclaudecli-daemon -f
+journalctl --user -u voicetype-daemon -f
 ```
 
 ### Development
@@ -1396,7 +1396,7 @@ journalctl --user -u voiceclaudecli-daemon -f
 source venv/bin/activate
 
 # After code changes
-systemctl --user restart voiceclaudecli-daemon
+systemctl --user restart voicetype-daemon
 
 # Run installer
 bash scripts/install.sh
@@ -1431,7 +1431,7 @@ When user says "handover", update this file with:
 
 **Ready for:** User installations, contributions, feature additions, platform expansion
 
-**Latest Release:** https://github.com/aldervall/Voice-to-Claude-CLI/releases/tag/v1.3.0
+**Latest Release:** https://github.com/aldervall/VoiceType/releases/tag/v1.3.0
 
 ---
 

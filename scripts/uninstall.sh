@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #===============================================================================
-# Voice-to-Claude-CLI Uninstaller
+# VoiceType Uninstaller
 #
 # Removes all components installed by install.sh:
 # - Systemd user services
@@ -40,7 +40,7 @@ while [[ $# -gt 0 ]]; do
             ;;
         --help|-h)
             cat << EOF
-Voice-to-Claude-CLI Uninstaller
+VoiceType Uninstaller
 
 Usage: bash scripts/uninstall.sh [OPTIONS]
 
@@ -53,8 +53,8 @@ Options:
 What Gets Removed:
   Always:
     • Systemd services (daemon, whisper-server)
-    • Launcher scripts (~/.local/bin/voiceclaudecli-*)
-    • Installation directory (~/.local/voiceclaudecli)
+    • Launcher scripts (~/.local/bin/voicetype-*)
+    • Installation directory (~/.local/voicetype)
     • Temporary builds (/tmp/whisper.cpp)
     • Running processes
 
@@ -90,19 +90,19 @@ cat << "EOF"
 
 ╔═══════════════════════════════════════════════════════╗
 ║                                                       ║
-║        🗑  Voice-to-Claude-CLI Uninstaller          ║
+║        🗑  VoiceType Uninstaller          ║
 ║                                                       ║
 ╚═══════════════════════════════════════════════════════╝
 
 EOF
 
-echo_info "This will remove all Voice-to-Claude-CLI components"
+echo_info "This will remove all VoiceType components"
 echo_warning "This action cannot be undone!"
 echo ""
 echo "The following will be removed:"
 echo "  • Systemd services (daemon, whisper-server)"
 echo "  • Launcher scripts in ~/.local/bin/"
-echo "  • Installation directory: ~/.local/voiceclaudecli"
+echo "  • Installation directory: ~/.local/voicetype"
 echo "  • Temporary build directory: /tmp/whisper.cpp"
 echo "  • Running processes"
 echo ""
@@ -126,7 +126,7 @@ echo "========================================="
 echo ""
 
 # Stop systemd services
-for service in voiceclaudecli-daemon whisper-server voice-holdtospeak voice-input; do
+for service in voicetype-daemon whisper-server voice-holdtospeak voice-input; do
     if systemctl --user is-active "$service" &>/dev/null; then
         echo_info "Stopping $service..."
         systemctl --user stop "$service" 2>/dev/null || true
@@ -135,7 +135,7 @@ for service in voiceclaudecli-daemon whisper-server voice-holdtospeak voice-inpu
 done
 
 # Disable systemd services
-for service in voiceclaudecli-daemon whisper-server voice-holdtospeak voice-input; do
+for service in voicetype-daemon whisper-server voice-holdtospeak voice-input; do
     if systemctl --user is-enabled "$service" &>/dev/null; then
         echo_info "Disabling $service..."
         systemctl --user disable "$service" 2>/dev/null || true
@@ -173,7 +173,7 @@ echo ""
 SERVICE_DIR="$HOME/.config/systemd/user"
 SERVICES_REMOVED=0
 
-for service_file in voiceclaudecli-daemon.service whisper-server.service voice-holdtospeak.service voice-input.service; do
+for service_file in voicetype-daemon.service whisper-server.service voice-holdtospeak.service voice-input.service; do
     if [ -f "$SERVICE_DIR/$service_file" ]; then
         echo_info "Removing $service_file..."
         rm -f "$SERVICE_DIR/$service_file"
@@ -199,7 +199,7 @@ echo ""
 BIN_DIR="$HOME/.local/bin"
 SCRIPTS_REMOVED=0
 
-for script in voiceclaudecli-daemon voiceclaudecli-input voiceclaudecli-interactive voiceclaudecli-stop-server claude-voice-input voice-input; do
+for script in voicetype-daemon voicetype-input voicetype-interactive voicetype-stop-server claude-voice-input voice-input; do
     if [ -f "$BIN_DIR/$script" ]; then
         echo_info "Removing $script..."
         rm -f "$BIN_DIR/$script"
@@ -218,14 +218,14 @@ echo " Step 5/6: Removing Installation Dirs"
 echo "========================================="
 echo ""
 
-# Remove ~/.local/voiceclaudecli
-if [ -d "$HOME/.local/voiceclaudecli" ]; then
-    echo_info "Removing ~/.local/voiceclaudecli..."
-    DIR_SIZE=$(du -sh "$HOME/.local/voiceclaudecli" 2>/dev/null | cut -f1)
-    rm -rf "$HOME/.local/voiceclaudecli"
-    echo_success "Removed ~/.local/voiceclaudecli ($DIR_SIZE)"
+# Remove ~/.local/voicetype
+if [ -d "$HOME/.local/voicetype" ]; then
+    echo_info "Removing ~/.local/voicetype..."
+    DIR_SIZE=$(du -sh "$HOME/.local/voicetype" 2>/dev/null | cut -f1)
+    rm -rf "$HOME/.local/voicetype"
+    echo_success "Removed ~/.local/voicetype ($DIR_SIZE)"
 else
-    echo_info "~/.local/voiceclaudecli not found"
+    echo_info "~/.local/voicetype not found"
 fi
 
 # Remove /tmp/whisper.cpp
@@ -391,7 +391,7 @@ cat << "EOF"
 
 EOF
 
-echo_success "Voice-to-Claude-CLI system integration removed"
+echo_success "VoiceType system integration removed"
 echo ""
 
 # Show what was kept based on choices
@@ -416,6 +416,6 @@ echo ""
 if [ "$REMOVE_PROJECT" = false ]; then
     echo_success "To reinstall: cd $PROJECT_ROOT && bash scripts/install.sh"
 else
-    echo_success "To reinstall: git clone https://github.com/aldervall/Voice-to-Claude-CLI.git"
+    echo_success "To reinstall: git clone https://github.com/aldervall/VoiceType.git"
 fi
 echo ""

@@ -2,7 +2,7 @@
 description: Quick voice input - record and transcribe audio to text
 ---
 
-You are helping the user use voice input with Voice-to-Claude-CLI.
+You are helping the user use voice input with VoiceType.
 
 ## Steps
 
@@ -15,7 +15,7 @@ You are helping the user use voice input with Voice-to-Claude-CLI.
    - Will record for 5 seconds when they press ENTER
    - Transcription will type into active window
 
-3. **Run:** `voiceclaudecli-input`
+3. **Run:** `voicetype-input`
 
 ## Troubleshooting
 
@@ -25,4 +25,4 @@ You are helping the user use voice input with Voice-to-Claude-CLI.
 
 ## Tip
 
-For continuous voice input, suggest daemon mode: `systemctl --user start voiceclaudecli-daemon` (then just hold F12 to record)
+For continuous voice input, suggest daemon mode: `systemctl --user start voicetype-daemon` (then just hold F12 to record)

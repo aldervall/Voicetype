@@ -61,7 +61,7 @@
 - ✅ Platform detection functional (Wayland, KDE, all tools detected)
 - ✅ Plugin files at correct locations (plugin.json, commands, skills)
 - ✅ Whisper server running (health check: OK)
-- ✅ Services active (whisper-server, voiceclaudecli-daemon)
+- ✅ Services active (whisper-server, voicetype-daemon)
 - ✅ Launcher scripts installed (3 scripts in ~/.local/bin/)
 
 ---
@@ -115,7 +115,7 @@ voice-to-claude-cli/
 │
 ├── src/                            # ✅ Python source
 │   ├── __init__.py
-│   ├── voice_to_claude.py
+│   ├── voice_type.py
 │   ├── platform_detect.py
 │   ├── voice_holdtospeak.py
 │   └── voice_to_text.py
@@ -193,7 +193,7 @@ voice-to-claude-cli/
 
 ```
 1. Whisper Server: {"status":"ok"} ✅
-2. Services: whisper-server (active), voiceclaudecli-daemon (active) ✅
+2. Services: whisper-server (active), voicetype-daemon (active) ✅
 3. Launcher Scripts: 3 installed ✅
 4. Python Environment: All imports OK ✅
 ```

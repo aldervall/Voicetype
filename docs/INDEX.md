@@ -1,6 +1,6 @@
 # Documentation Index
 
-**Voice-to-Claude-CLI** - Complete documentation guide
+**VoiceType** - Complete documentation guide
 
 ---
 
@@ -90,7 +90,7 @@
 
 ## 🎯 Common Tasks
 
-### "I want to install Voice-to-Claude-CLI"
+### "I want to install VoiceType"
 → **[README.md](README.md)** - Start here!
 
 ### "Installation failed, how do I fix it?"
@@ -112,7 +112,7 @@
 
 ### "I found a bug"
 → **[INSTALLATION_STATUS.md](INSTALLATION_STATUS.md)** - Check if it's known
-→ **[GitHub Issues](https://github.com/aldervall/Voice-to-Claude-CLI/issues)** - Report it!
+→ **[GitHub Issues](https://github.com/aldervall/VoiceType/issues)** - Report it!
 
 ---
 
@@ -141,8 +141,8 @@ docs/
 
 ## 🔗 External Resources
 
-- **GitHub Repository:** https://github.com/aldervall/Voice-to-Claude-CLI
-- **Issue Tracker:** https://github.com/aldervall/Voice-to-Claude-CLI/issues
+- **GitHub Repository:** https://github.com/aldervall/VoiceType
+- **Issue Tracker:** https://github.com/aldervall/VoiceType/issues
 - **License:** MIT (see [LICENSE](../LICENSE))
 
 ---

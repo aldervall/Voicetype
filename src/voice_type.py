@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Voice-to-Claude-CLI: Local voice transcription using whisper.cpp
+VoiceType: Local voice transcription using whisper.cpp
 """
 import os
 import sys

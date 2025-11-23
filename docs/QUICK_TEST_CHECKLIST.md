@@ -9,7 +9,7 @@ Use this checklist to quickly verify the installation flow works after making ch
 ```bash
 # Add marketplace in Claude Code
 /plugin
-# → Add Marketplace → aldervall/Voice-to-Claude-CLI
+# → Add Marketplace → aldervall/VoiceType
 
 # Enable plugin
 /plugin → Manage plugins → voice → Space → Apply changes → Restart
@@ -82,7 +82,7 @@ systemctl --user status whisper-server ydotool
 # Test interactive mode
 cd ~/.claude/plugins/marketplaces/voice-to-claude-marketplace
 source venv/bin/activate
-python -m src.voice_to_claude
+python -m src.voice_type
 # Press ENTER, speak "testing one two three", verify output
 ```
 
@@ -138,7 +138,7 @@ If FAIL, consult `docs/INSTALLATION_FLOW.md` for detailed troubleshooting.
 ```bash
 curl -s http://127.0.0.1:2022/health && \
 systemctl --user is-active whisper-server ydotool && \
-ls ~/.local/bin/voiceclaudecli-* && \
+ls ~/.local/bin/voicetype-* && \
 echo "✓ System healthy"
 ```
 

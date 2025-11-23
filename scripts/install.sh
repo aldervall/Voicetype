@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Voice-to-Claude-CLI Universal Installer
+# VoiceType Universal Installer
 # Supports: Arch, Ubuntu/Debian, Fedora, OpenSUSE
 # Works standalone or as Claude Code plugin
 #
@@ -19,7 +19,7 @@ else
     echo "Running standalone installation"
 fi
 
-INSTALL_DIR="${INSTALL_DIR:-$HOME/.local/voiceclaudecli}"
+INSTALL_DIR="${INSTALL_DIR:-$HOME/.local/voicetype}"
 BIN_DIR="$HOME/.local/bin"
 
 # Track installation start time for error reporting
@@ -60,7 +60,7 @@ for arg in "$@"; do
             echo_warning "Force mode enabled: Will reinstall all components"
             ;;
         --help|-h)
-            echo "Voice-to-Claude-CLI Installer"
+            echo "VoiceType Installer"
             echo ""
             echo "Usage: $0 [OPTIONS]"
             echo ""
@@ -112,7 +112,7 @@ echo -e "${CYAN}${BOLD}"
 cat << "EOF"
 ╔═══════════════════════════════════════════════════════╗
 ║                                                       ║
-║     🎙️  VOICE-TO-CLAUDE-CLI INSTALLER 🚀            ║
+║          🎙️  VOICETYPE INSTALLER 🚀                 ║
 ║                                                       ║
 ║     Local Voice Transcription - 100% Private         ║
 ║                                                       ║
@@ -433,53 +433,53 @@ echo
 
 mkdir -p "$BIN_DIR"
 
-# Create voiceclaudecli-daemon launcher
-if [ "$FORCE_INSTALL" = false ] && [ -f "$BIN_DIR/voiceclaudecli-daemon" ]; then
-    echo_success "Launcher script voiceclaudecli-daemon already exists ✓"
+# Create voicetype-daemon launcher
+if [ "$FORCE_INSTALL" = false ] && [ -f "$BIN_DIR/voicetype-daemon" ]; then
+    echo_success "Launcher script voicetype-daemon already exists ✓"
 else
-    cat > "$BIN_DIR/voiceclaudecli-daemon" <<EOF
+    cat > "$BIN_DIR/voicetype-daemon" <<EOF
 #!/bin/bash
 cd "$INSTALL_DIR"
 source "$INSTALL_DIR/venv/bin/activate"
 exec python -m src.voice_holdtospeak "\$@"
 EOF
-    chmod +x "$BIN_DIR/voiceclaudecli-daemon"
-    echo_success "Created: $BIN_DIR/voiceclaudecli-daemon"
+    chmod +x "$BIN_DIR/voicetype-daemon"
+    echo_success "Created: $BIN_DIR/voicetype-daemon"
 fi
 
-# Create voiceclaudecli-input launcher (one-shot)
-if [ "$FORCE_INSTALL" = false ] && [ -f "$BIN_DIR/voiceclaudecli-input" ]; then
-    echo_success "Launcher script voiceclaudecli-input already exists ✓"
+# Create voicetype-input launcher (one-shot)
+if [ "$FORCE_INSTALL" = false ] && [ -f "$BIN_DIR/voicetype-input" ]; then
+    echo_success "Launcher script voicetype-input already exists ✓"
 else
-    cat > "$BIN_DIR/voiceclaudecli-input" <<EOF
+    cat > "$BIN_DIR/voicetype-input" <<EOF
 #!/bin/bash
 cd "$INSTALL_DIR"
 source "$INSTALL_DIR/venv/bin/activate"
 exec python -m src.voice_to_text "\$@"
 EOF
-    chmod +x "$BIN_DIR/voiceclaudecli-input"
-    echo_success "Created: $BIN_DIR/voiceclaudecli-input"
+    chmod +x "$BIN_DIR/voicetype-input"
+    echo_success "Created: $BIN_DIR/voicetype-input"
 fi
 
-# Create voiceclaudecli-interactive launcher
-if [ "$FORCE_INSTALL" = false ] && [ -f "$BIN_DIR/voiceclaudecli-interactive" ]; then
-    echo_success "Launcher script voiceclaudecli-interactive already exists ✓"
+# Create voicetype-interactive launcher
+if [ "$FORCE_INSTALL" = false ] && [ -f "$BIN_DIR/voicetype-interactive" ]; then
+    echo_success "Launcher script voicetype-interactive already exists ✓"
 else
-    cat > "$BIN_DIR/voiceclaudecli-interactive" <<EOF
+    cat > "$BIN_DIR/voicetype-interactive" <<EOF
 #!/bin/bash
 cd "$INSTALL_DIR"
 source "$INSTALL_DIR/venv/bin/activate"
-exec python -m src.voice_to_claude "\$@"
+exec python -m src.voice_type "\$@"
 EOF
-    chmod +x "$BIN_DIR/voiceclaudecli-interactive"
-    echo_success "Created: $BIN_DIR/voiceclaudecli-interactive"
+    chmod +x "$BIN_DIR/voicetype-interactive"
+    echo_success "Created: $BIN_DIR/voicetype-interactive"
 fi
 
-# Create voiceclaudecli-stop-server launcher (manual shutdown)
-if [ "$FORCE_INSTALL" = false ] && [ -f "$BIN_DIR/voiceclaudecli-stop-server" ]; then
-    echo_success "Launcher script voiceclaudecli-stop-server already exists ✓"
+# Create voicetype-stop-server launcher (manual shutdown)
+if [ "$FORCE_INSTALL" = false ] && [ -f "$BIN_DIR/voicetype-stop-server" ]; then
+    echo_success "Launcher script voicetype-stop-server already exists ✓"
 else
-    cat > "$BIN_DIR/voiceclaudecli-stop-server" <<EOF
+    cat > "$BIN_DIR/voicetype-stop-server" <<EOF
 #!/bin/bash
 # Stop the whisper.cpp server to free up system resources
 
@@ -495,25 +495,25 @@ if pgrep -f "whisper-server" > /dev/null; then
         exit 1
     else
         echo "✓ whisper-server stopped successfully"
-        echo "ℹ Run 'voiceclaudecli-daemon' or press F12 to restart automatically"
+        echo "ℹ Run 'voicetype-daemon' or press F12 to restart automatically"
     fi
 else
     echo "ℹ whisper-server is not running"
 fi
 EOF
-    chmod +x "$BIN_DIR/voiceclaudecli-stop-server"
-    echo_success "Created: $BIN_DIR/voiceclaudecli-stop-server"
+    chmod +x "$BIN_DIR/voicetype-stop-server"
+    echo_success "Created: $BIN_DIR/voicetype-stop-server"
 fi
 
-# Create voiceclaudecli-uninstall launcher (standalone uninstaller)
-if [ "$FORCE_INSTALL" = false ] && [ -f "$BIN_DIR/voiceclaudecli-uninstall" ]; then
-    echo_success "Launcher script voiceclaudecli-uninstall already exists ✓"
+# Create voicetype-uninstall launcher (standalone uninstaller)
+if [ "$FORCE_INSTALL" = false ] && [ -f "$BIN_DIR/voicetype-uninstall" ]; then
+    echo_success "Launcher script voicetype-uninstall already exists ✓"
 else
     # Copy the standalone uninstaller script
     if [ -f "$PROJECT_ROOT/scripts/standalone-uninstall.sh" ]; then
-        cp "$PROJECT_ROOT/scripts/standalone-uninstall.sh" "$BIN_DIR/voiceclaudecli-uninstall"
-        chmod +x "$BIN_DIR/voiceclaudecli-uninstall"
-        echo_success "Created: $BIN_DIR/voiceclaudecli-uninstall"
+        cp "$PROJECT_ROOT/scripts/standalone-uninstall.sh" "$BIN_DIR/voicetype-uninstall"
+        chmod +x "$BIN_DIR/voicetype-uninstall"
+        echo_success "Created: $BIN_DIR/voicetype-uninstall"
     else
         echo_warning "Standalone uninstaller not found: $PROJECT_ROOT/scripts/standalone-uninstall.sh"
         echo_info "Uninstaller will not be available - use scripts/uninstall.sh manually"
@@ -533,17 +533,17 @@ SYSTEMD_USER_DIR="$HOME/.config/systemd/user"
 mkdir -p "$SYSTEMD_USER_DIR"
 
 # Create service file with correct paths
-if [ "$FORCE_INSTALL" = false ] && [ -f "$SYSTEMD_USER_DIR/voiceclaudecli-daemon.service" ]; then
+if [ "$FORCE_INSTALL" = false ] && [ -f "$SYSTEMD_USER_DIR/voicetype-daemon.service" ]; then
     echo_success "Systemd service already configured ✓"
 else
-    cat > "$SYSTEMD_USER_DIR/voiceclaudecli-daemon.service" <<EOF
+    cat > "$SYSTEMD_USER_DIR/voicetype-daemon.service" <<EOF
 [Unit]
-Description=Voice-to-Claude-CLI Hold-to-Speak Daemon
+Description=VoiceType Hold-to-Speak Daemon
 After=default.target
 
 [Service]
 Type=simple
-ExecStart=$BIN_DIR/voiceclaudecli-daemon
+ExecStart=$BIN_DIR/voicetype-daemon
 Restart=on-failure
 RestartSec=5
 
@@ -551,7 +551,7 @@ RestartSec=5
 WantedBy=default.target
 EOF
 
-    echo_success "Created systemd service: $SYSTEMD_USER_DIR/voiceclaudecli-daemon.service"
+    echo_success "Created systemd service: $SYSTEMD_USER_DIR/voicetype-daemon.service"
 fi
 
 # Reload systemd
@@ -611,7 +611,7 @@ cat << "EOF"
 ║                                                       ║
 ║          ✨ INSTALLATION COMPLETE! ✨                ║
 ║                                                       ║
-║     🎙️  Voice-to-Claude-CLI is ready to use! 🚀     ║
+║       🎙️  VoiceType is ready to use! 🚀            ║
 ║                                                       ║
 ╚═══════════════════════════════════════════════════════╝
 EOF
@@ -627,24 +627,24 @@ echo_success "🎉 Voice transcription system installed successfully!"
 echo
 
 echo "Available commands:"
-echo "  voiceclaudecli-daemon       - Start F12 hold-to-speak daemon"
-echo "  voiceclaudecli-input        - One-shot voice input"
-echo "  voiceclaudecli-interactive  - Interactive terminal mode"
-echo "  voiceclaudecli-stop-server  - Stop whisper.cpp server (save resources)"
-echo "  voiceclaudecli-uninstall    - Remove Voice-to-Claude-CLI from system"
+echo "  voicetype-daemon       - Start F12 hold-to-speak daemon"
+echo "  voicetype-input        - One-shot voice input"
+echo "  voicetype-interactive  - Interactive terminal mode"
+echo "  voicetype-stop-server  - Stop whisper.cpp server (save resources)"
+echo "  voicetype-uninstall    - Remove VoiceType from system"
 echo
 
 echo "To start the daemon as a service:"
-echo "  systemctl --user start voiceclaudecli-daemon"
-echo "  systemctl --user enable voiceclaudecli-daemon  # Auto-start on login"
+echo "  systemctl --user start voicetype-daemon"
+echo "  systemctl --user enable voicetype-daemon  # Auto-start on login"
 echo
 
 echo "To check daemon status:"
-echo "  systemctl --user status voiceclaudecli-daemon"
+echo "  systemctl --user status voicetype-daemon"
 echo
 
 echo "To view daemon logs:"
-echo "  journalctl --user -u voiceclaudecli-daemon -f"
+echo "  journalctl --user -u voicetype-daemon -f"
 echo
 
 if [[ "$INSTALL_WHISPER" =~ ^[Yy] ]]; then
