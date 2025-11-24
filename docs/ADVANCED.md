@@ -125,62 +125,120 @@ Claude will autonomously activate voice transcription.
 
 ## Customization
 
+### Configuration File
+
+VoiceType uses a TOML configuration file for easy customization:
+
+```
+~/.config/voicetype/config.toml
+```
+
+This file is created automatically during installation. Edit it to customize all settings.
+
 ### Changing the Hotkey
 
-Edit the daemon service file:
+Edit the configuration file:
 
 ```bash
-nano ~/.config/systemd/user/voicetype-daemon.service
+nano ~/.config/voicetype/config.toml
 ```
 
-Find the `ExecStart` line and add parameters:
+Change the `trigger_key` value:
 
-```ini
-[Service]
-ExecStart=/home/username/.local/bin/voicetype-daemon --key KEY_F11
+```toml
+[daemon]
+# Available keys: F1-F24, Pause, PrintScreen, ScrollLock
+trigger_key = "F11"  # Change from default F12
 ```
 
-Available key codes (from evdev):
-- `KEY_F12` (default)
-- `KEY_F11`
-- `KEY_F10`
-- See `/usr/include/linux/input-event-codes.h` for full list
+**Available keys:**
+- Function keys: `F1` through `F24`
+- Special keys: `Pause`, `PrintScreen`, `ScrollLock`
 
-After changes:
+After changes, restart the daemon:
 ```bash
-systemctl --user daemon-reload
 systemctl --user restart voicetype-daemon
+```
+
+The daemon will show the configured key on startup:
+```
+Trigger key: F11
+Config: /home/username/.config/voicetype/config.toml
+```
+
+### All Configuration Options
+
+Here's a complete example with all available options:
+
+```toml
+[daemon]
+# Trigger key for hold-to-speak
+trigger_key = "F12"
+
+# Minimum recording duration (prevents accidental triggers)
+min_duration = 0.3
+
+[audio]
+# Audio feedback beeps
+beep_enabled = true
+
+# Beep frequencies in Hz
+start_frequency = 800
+stop_frequency = 400
+
+# Beep duration in seconds
+beep_duration = 0.1
+
+[output]
+# Clipboard paste delay (seconds)
+clipboard_paste_delay = 0.15
+
+# Notification preview length (characters)
+notification_preview_length = 50
+
+# Notification timeout (milliseconds)
+notification_timeout = 5000
+
+[ui]
+# Real-time audio level meter
+show_audio_meter = true
+meter_width = 20
+meter_update_rate = 10
 ```
 
 ### Recording Duration
 
-Edit the Python source:
+For daemon mode (hold-to-speak), there's no fixed duration - you control it by how long you hold the trigger key.
 
-```bash
-nano ~/path/to/voice-to-claude-cli/src/voice_holdtospeak.py
+The `min_duration` setting prevents accidental triggers:
+
+```toml
+[daemon]
+min_duration = 0.3  # Minimum 0.3 seconds to register
 ```
 
-Find the `DURATION` constant at the top and change it:
-
-```python
-# Default is 5 seconds
-DURATION = 10  # Change to 10 seconds
-```
-
-Restart the daemon:
-```bash
-systemctl --user restart voicetype-daemon
-```
+For one-shot mode (`voicetype-input`), the 5-second duration is set in `src/voice_type.py` (DURATION constant).
 
 ### Audio Beeps
 
-VoiceType provides audio feedback when you start/stop recording. You can choose between **WAV files** (custom sounds) or **frequency tones** (simple beeps).
+VoiceType provides audio feedback when you start/stop recording. Configure via the config file:
 
-#### Using WAV Files (Custom Sounds)
+```toml
+[audio]
+# Disable beeps completely for silent mode
+beep_enabled = true
 
-**Default behavior:** The start beep now uses a WAV file (`sounds/start.wav`) for a more pleasant audio experience.
+# Beep frequencies in Hz
+start_frequency = 800  # High pitch on start
+stop_frequency = 400   # Low pitch on stop
 
-**To use your own WAV files:**
+# Beep duration in seconds
+beep_duration = 0.1
+```
+
+#### Using Custom WAV Files
+
+For custom sounds instead of generated tones, you can still edit the Python source:
 
 1. Place your WAV files in the `sounds/` directory:
    ```bash
@@ -188,12 +246,7 @@ VoiceType provides audio feedback when you start/stop recording. You can choose 
    cp my-stop-sound.wav sounds/stop.wav
    ```
 
-2. Edit `src/voice_holdtospeak.py` (lines 28-32):
-   ```python
-   BEEP_USE_WAV_FILES = True
-   BEEP_START_SOUND = os.path.join(os.path.dirname(__file__), '../sounds/start.wav')
-   BEEP_STOP_SOUND = os.path.join(os.path.dirname(__file__), '../sounds/stop.wav')
-   ```
+2. Edit `src/voice_holdtospeak.py` to set `BEEP_USE_WAV_FILES = True` and update paths.
 
 3. Restart the daemon:
    ```bash
@@ -202,61 +255,22 @@ VoiceType provides audio feedback when you start/stop recording. You can choose 
 
 **WAV file requirements:**
 - Format: Any WAV format supported by `paplay` (PCM, 16-bit recommended)
-- Sample rate: Any (44.1kHz works well)
-- Channels: Mono or stereo
-- Duration: Keep short (100-500ms recommended for quick feedback)
-
-**To trim a WAV file:**
-```bash
-# Using ffmpeg (trim to first 150ms)
-ffmpeg -i sounds/start.wav -t 0.15 -c copy sounds/start-trimmed.wav
-```
-
-#### Using Frequency Tones (Simple Beeps)
-
-**Switch back to frequency tones:**
-
-Edit `src/voice_holdtospeak.py` (line 30):
-```python
-BEEP_USE_WAV_FILES = False  # Use frequency tones instead
-```
-
-**Customize frequency tones:**
-
-Edit the constants (lines 35-37):
-```python
-BEEP_START_FREQUENCY = 800  # Hz - Higher = higher pitch
-BEEP_STOP_FREQUENCY = 400   # Hz - Lower = lower pitch
-BEEP_DURATION = 0.1         # seconds
-```
-
-#### Disable All Beeps
-
-Edit `src/voice_holdtospeak.py` (line 26):
-```python
-BEEP_ENABLED = False  # Completely silent mode
-```
-
-After any changes, restart the daemon:
-```bash
-systemctl --user restart voicetype-daemon
-```
+- Duration: Keep short (100-500ms recommended)
 
 ### Desktop Notifications
 
-**Disable notifications:**
+Configure notification behavior in the config file:
 
-Edit `src/voice_holdtospeak.py` and comment out `show_notification()` calls:
+```toml
+[output]
+# Character preview length in notifications
+notification_preview_length = 50
 
-```python
-# self.show_notification("Voice Transcription", preview)  # Disabled
+# How long notifications stay visible (milliseconds)
+notification_timeout = 5000
 ```
 
-**Change notification timeout:**
-
-```python
-NOTIFICATION_TIMEOUT = 5000  # milliseconds (5 seconds)
-```
+To disable notifications entirely, edit `src/voice_holdtospeak.py` and comment out `show_notification()` calls.
 
 ## Integration with Other Applications
 

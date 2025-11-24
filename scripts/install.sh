@@ -522,6 +522,50 @@ fi
 
 echo
 
+# Create configuration file
+echo
+echo_header "╔═══════════════════════════════════════════════════════╗"
+echo_header "║  🔧 Configuration Setup                               ║"
+echo_header "╚═══════════════════════════════════════════════════════╝"
+echo
+
+CONFIG_DIR="$HOME/.config/voicetype"
+mkdir -p "$CONFIG_DIR"
+
+if [ "$FORCE_INSTALL" = false ] && [ -f "$CONFIG_DIR/config.toml" ]; then
+    echo_success "Configuration file already exists ✓"
+    echo_info "Location: $CONFIG_DIR/config.toml"
+else
+    cat > "$CONFIG_DIR/config.toml" <<'CONFIG'
+# VoiceType Configuration
+# Edit this file to customize hotkey and settings
+
+[daemon]
+# Trigger key for hold-to-speak daemon mode
+# Available keys: F1-F24, Pause, PrintScreen, ScrollLock
+trigger_key = "F12"
+
+# Minimum recording duration in seconds (prevents accidental triggers)
+min_duration = 0.3
+
+[audio]
+# Enable audio feedback beeps
+beep_enabled = true
+
+# Beep frequencies in Hz
+start_frequency = 800
+stop_frequency = 400
+
+[ui]
+# Show real-time audio level meter while recording
+show_audio_meter = true
+CONFIG
+    echo_success "Created configuration: $CONFIG_DIR/config.toml"
+    echo_info "Edit this file to change the trigger key (default: F12)"
+fi
+
+echo
+
 # Install systemd service
 echo
 echo_header "╔═══════════════════════════════════════════════════════╗"
@@ -627,11 +671,16 @@ echo_success "🎉 Voice transcription system installed successfully!"
 echo
 
 echo "Available commands:"
-echo "  voicetype-daemon       - Start F12 hold-to-speak daemon"
+echo "  voicetype-daemon       - Start hold-to-speak daemon (default: F12)"
 echo "  voicetype-input        - One-shot voice input"
 echo "  voicetype-interactive  - Interactive terminal mode"
 echo "  voicetype-stop-server  - Stop whisper.cpp server (save resources)"
 echo "  voicetype-uninstall    - Remove VoiceType from system"
+echo
+
+echo "📁 Configuration file: ~/.config/voicetype/config.toml"
+echo "   Edit to change trigger key (F1-F24, Pause, PrintScreen, ScrollLock)"
+echo "   Restart daemon after changes: systemctl --user restart voicetype-daemon"
 echo
 
 echo "To start the daemon as a service:"

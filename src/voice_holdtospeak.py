@@ -17,33 +17,38 @@ import tempfile
 import requests
 from .voice_type import VoiceTranscriber, SAMPLE_RATE, WHISPER_URL
 from .platform_detect import get_platform_info
+from .config import load_config, get_trigger_key_code, get_trigger_key_name, get_config_path
 import evdev
 from evdev import ecodes
 
-# Configuration
-TRIGGER_KEY = ecodes.KEY_F12  # F12 key
-MIN_RECORDING_DURATION = 0.3  # Minimum seconds to avoid false triggers
-BEEP_ENABLED = True
+# Load configuration from ~/.config/voicetype/config.toml
+_config = load_config()
+
+# Configuration - loaded from config file with fallback defaults
+TRIGGER_KEY = get_trigger_key_code(_config)
+TRIGGER_KEY_NAME = get_trigger_key_name(_config)
+MIN_RECORDING_DURATION = _config["daemon"]["min_duration"]
+BEEP_ENABLED = _config["audio"]["beep_enabled"]
 
 # Audio feedback options - choose one:
 # Option 1: Use WAV files (set BEEP_USE_WAV_FILES = True)
-BEEP_USE_WAV_FILES = True
+BEEP_USE_WAV_FILES = _config["audio"]["beep_use_wav_files"]
 BEEP_START_SOUND = os.path.join(os.path.dirname(__file__), '../sounds/start.wav')
 BEEP_STOP_SOUND = None  # None = use frequency tone for stop beep
 
 # Option 2: Use frequency tones (set BEEP_USE_WAV_FILES = False)
-BEEP_START_FREQUENCY = 800  # Hz - High beep on recording start
-BEEP_STOP_FREQUENCY = 400  # Hz - Low beep on recording stop
-BEEP_DURATION = 0.1  # seconds
+BEEP_START_FREQUENCY = _config["audio"]["start_frequency"]
+BEEP_STOP_FREQUENCY = _config["audio"]["stop_frequency"]
+BEEP_DURATION = _config["audio"]["beep_duration"]
 
-CLIPBOARD_PASTE_DELAY = 0.15  # seconds - Wait after clipboard copy before paste
-NOTIFICATION_PREVIEW_LENGTH = 50  # characters - Preview length in notifications
-NOTIFICATION_TIMEOUT = 5000  # milliseconds
+CLIPBOARD_PASTE_DELAY = _config["output"]["clipboard_paste_delay"]
+NOTIFICATION_PREVIEW_LENGTH = _config["output"]["notification_preview_length"]
+NOTIFICATION_TIMEOUT = _config["output"]["notification_timeout"]
 
 # Audio level meter configuration
-SHOW_AUDIO_METER = True  # Show real-time audio level in terminal
-METER_WIDTH = 20  # Width of the audio level bar
-METER_UPDATE_RATE = 10  # Updates per second
+SHOW_AUDIO_METER = _config["ui"]["show_audio_meter"]
+METER_WIDTH = _config["ui"]["meter_width"]
+METER_UPDATE_RATE = _config["ui"]["meter_update_rate"]
 
 
 class StreamingRecorder:
@@ -345,7 +350,7 @@ class HoldToSpeakDaemon:
 
         if event.value == 1:  # Key pressed
             if not SHOW_AUDIO_METER:
-                print("\n🎤 Recording... (hold F12)")
+                print(f"\n🎤 Recording... (hold {TRIGGER_KEY_NAME})")
             self.play_beep(sound_file=BEEP_START_SOUND, frequency=BEEP_START_FREQUENCY, duration=BEEP_DURATION)
             self.recorder.start()
             self._start_audio_meter()  # Start the visual meter
@@ -410,7 +415,7 @@ class HoldToSpeakDaemon:
         print(f"Platform: {self.platform.display_server.upper()}/{self.platform.desktop_env}")
         print(f"Clipboard: {self.platform.get_clipboard_tool() or 'None'}")
         print(f"Keyboard: {self.platform.get_keyboard_tool() or 'None'}")
-        print(f"Trigger key: F12")
+        print(f"Trigger key: {TRIGGER_KEY_NAME}")
         print(f"Whisper server: {WHISPER_URL}")
         print(f"Minimum recording: {MIN_RECORDING_DURATION}s")
         print("="*60)
@@ -438,7 +443,7 @@ class HoldToSpeakDaemon:
         self.keyboard_devices = self.find_keyboard_devices()
 
         if not self.keyboard_devices:
-            print("✗ Error: Could not find any keyboard device with F12 key")
+            print(f"✗ Error: Could not find any keyboard device with {TRIGGER_KEY_NAME} key")
             print("\nTroubleshooting:")
             print("1. Make sure you're in the 'input' group:")
             print("   sudo usermod -a -G input $USER")
@@ -448,7 +453,8 @@ class HoldToSpeakDaemon:
             sys.exit(1)
 
         print(f"✓ Monitoring {len(self.keyboard_devices)} keyboard(s)")
-        print("\n🎯 Ready! Hold F12 to record, release to transcribe and type.")
+        print(f"\n🎯 Ready! Hold {TRIGGER_KEY_NAME} to record, release to transcribe and type.")
+        print(f"   Config: {get_config_path()}")
         print("Press Ctrl+C to stop daemon.\n")
 
         try:

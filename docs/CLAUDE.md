@@ -683,9 +683,25 @@ Continue with transcription
 
 ### Key Configuration
 
+**User Configuration File:** `~/.config/voicetype/config.toml`
+- Created automatically by installer
+- Configurable trigger key (F1-F24, Pause, PrintScreen, ScrollLock)
+- Audio beep settings, notification timeouts, UI options
+- Falls back to defaults if missing
+
+**Core Module:** `src/config.py`
+- Loads TOML config with fallback defaults
+- Key name → evdev code mapping
+- Used by daemon on startup
+
+**Hardcoded Constants:**
 - **Audio:** 16kHz sample rate (whisper requirement), 5s fixed duration for one-shot modes
-- **Daemon:** F12 trigger key, 0.3s minimum duration, beeps enabled by default
 - **Endpoint:** `http://127.0.0.1:2022/v1/audio/transcriptions` (whisper.cpp)
+
+**Default Daemon Settings (configurable):**
+- Trigger key: F12
+- Minimum duration: 0.3s
+- Beeps: enabled
 
 ### Data Flow
 
@@ -1092,7 +1108,7 @@ voice-to-claude-cli/
 └── venv/                # Python environment
 ```
 
-**Core Python:** `src/voice_type.py` (VoiceTranscriber), `src/platform_detect.py` (cross-platform), `src/voice_holdtospeak.py` (daemon), `src/voice_to_text.py` (one-shot)
+**Core Python:** `src/voice_type.py` (VoiceTranscriber), `src/platform_detect.py` (cross-platform), `src/voice_holdtospeak.py` (daemon), `src/voice_to_text.py` (one-shot), `src/config.py` (configuration loader)
 
 **Installation:** `scripts/install.sh` (master), `scripts/install-whisper.sh` (whisper.cpp installer)
 
@@ -1105,7 +1121,7 @@ voice-to-claude-cli/
 
 **Claude Integration:** `skills/voice/` (Skill with auto-start capability), `commands/` (slash commands)
 
-**Configuration:** `config/voice-holdtospeak.service` (systemd template), `requirements.txt`, `.gitignore`
+**Configuration:** `config/voice-holdtospeak.service` (systemd template), `config/config.toml.example` (user config template), `requirements.txt`, `.gitignore`
 
 **Docs:**
 - **Navigation:** `docs/INDEX.md` (documentation finder)
@@ -1118,6 +1134,7 @@ voice-to-claude-cli/
 **Generated files:**
 - `~/.local/bin/voicetype-*` (launchers)
 - `~/.config/systemd/user/voicetype-daemon.service`, `whisper-server.service`
+- `~/.config/voicetype/config.toml` (user configuration)
 
 ## Design Principles
 

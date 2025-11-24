@@ -1,13 +1,85 @@
 # Handover - VoiceType
 
-**Last Updated:** 2025-11-24 (Session 32)
+**Last Updated:** 2025-11-24 (Session 33)
 **Current Status:** ✅ Production Ready - v2.0.0
 **Plugin Name:** `voicetype`
 **Repository:** https://github.com/aldervall/Voicetype
 
 ---
 
-## 🎯 Current Session (Session 32 - 2025-11-24)
+## 🎯 Current Session (Session 33 - 2025-11-24)
+
+### Mission: ADD REAL-TIME AUDIO LEVEL METER 🎤
+
+**User Request:** "implement a function that can interact with the end user to show that it's actually listening on input. something graphical that makes the user know that it's actually working in the background"
+
+**What We Did:**
+1. ✅ **Researched visual feedback options** - Analyzed codebase for integration points
+2. ✅ **Implemented terminal audio meter** - Real-time amplitude bar with elapsed time
+3. ✅ **Added RMS calculation** - In `_audio_callback()` for live level detection
+4. ✅ **Created display thread** - Non-blocking updates at 10Hz
+5. ✅ **Added configuration** - SHOW_AUDIO_METER, METER_WIDTH, METER_UPDATE_RATE
+6. ✅ **Committed and pushed** - `6bd4ca3`
+
+### Changes Made
+
+#### **1. Audio Level Meter Implementation**
+
+**File:** `src/voice_holdtospeak.py`
+
+New configuration options:
+```python
+SHOW_AUDIO_METER = True   # Enable/disable meter
+METER_WIDTH = 20          # Width of bar
+METER_UPDATE_RATE = 10    # Updates per second
+```
+
+New methods in `StreamingRecorder`:
+- `current_level` attribute - Stores 0-1 normalized audio level
+- `get_elapsed_time()` - Returns recording duration
+- RMS calculation in `_audio_callback()`
+
+New methods in `HoldToSpeakDaemon`:
+- `_display_audio_meter()` - Renders bar with carriage return
+- `_start_audio_meter()` - Spawns display thread
+- `_stop_audio_meter()` - Cleanly terminates thread
+
+Visual output:
+```
+🎤 Recording... ████████░░░░░░░░░░░░ [2.3s]
+```
+
+### Key Discovery ⚠️
+
+**The audio meter only works when running daemon directly in terminal:**
+```bash
+voicetype-daemon  # ✅ Shows meter
+```
+
+**Does NOT work via systemd:**
+```bash
+systemctl --user start voicetype-daemon  # ❌ No visible meter
+journalctl --user -u voicetype-daemon -f  # Logs only, no \r support
+```
+
+**Why:** Carriage return (`\r`) updates work in interactive terminals but not in journalctl log output.
+
+### Open Issue
+
+Need alternative feedback for systemd service mode. Options discussed:
+- Enhanced desktop notifications with duration
+- Separate `voicetype-monitor` script
+- System tray indicator
+
+### Commit Information
+- **Commit:** `6bd4ca3`
+- **Message:** "feat: Add real-time audio level meter to daemon mode"
+- **Branch:** main
+- **Status:** ✅ Pushed to origin/main
+
+---
+
+## 🎯 Previous Session (Session 32 - 2025-11-24)
 
 ### Mission: README CLEANUP & v2.0.0 RELEASE 🚀
 

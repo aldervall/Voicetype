@@ -1,0 +1,44 @@
+# VoiceType Configuration
+# Copy this file to ~/.config/voicetype/config.toml to customize
+
+[daemon]
+# Trigger key for hold-to-speak daemon mode
+# Available keys: F1-F24, Pause, PrintScreen, ScrollLock
+trigger_key = "F12"
+
+# Minimum recording duration in seconds (prevents accidental triggers)
+min_duration = 0.3
+
+[audio]
+# Enable audio feedback beeps
+beep_enabled = true
+
+# Use WAV files for beeps (if false, uses generated tones)
+beep_use_wav_files = true
+
+# Beep frequencies in Hz (used when beep_use_wav_files = false)
+start_frequency = 800
+stop_frequency = 400
+
+# Beep duration in seconds
+beep_duration = 0.1
+
+[output]
+# Delay after copying to clipboard before pasting (seconds)
+clipboard_paste_delay = 0.15
+
+# Character length of text preview in notifications
+notification_preview_length = 50
+
+# Notification timeout in milliseconds
+notification_timeout = 5000
+
+[ui]
+# Show real-time audio level meter while recording
+show_audio_meter = true
+
+# Width of the audio meter in characters
+meter_width = 20
+
+# Audio meter refresh rate (updates per second)
+meter_update_rate = 10
