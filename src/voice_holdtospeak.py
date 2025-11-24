@@ -40,6 +40,11 @@ CLIPBOARD_PASTE_DELAY = 0.15  # seconds - Wait after clipboard copy before paste
 NOTIFICATION_PREVIEW_LENGTH = 50  # characters - Preview length in notifications
 NOTIFICATION_TIMEOUT = 5000  # milliseconds
 
+# Audio level meter configuration
+SHOW_AUDIO_METER = True  # Show real-time audio level in terminal
+METER_WIDTH = 20  # Width of the audio level bar
+METER_UPDATE_RATE = 10  # Updates per second
+
 
 class StreamingRecorder:
     """Records audio with dynamic start/stop capability"""
@@ -49,6 +54,7 @@ class StreamingRecorder:
         self.stream = None
         self.is_recording = False
         self.start_time = None
+        self.current_level = 0.0  # Current audio level (0-1)
 
     def start(self):
         """Start recording audio"""
@@ -110,6 +116,16 @@ class StreamingRecorder:
             print(f"Audio status: {status}", file=sys.stderr)
         if self.is_recording:
             self.audio_queue.put(indata.copy())
+            # Calculate RMS level for audio meter
+            rms = np.sqrt(np.mean(indata.astype(np.float32) ** 2))
+            # Normalize to 0-1 range (int16 max is 32767)
+            self.current_level = min(1.0, rms / 8000)  # Adjusted for typical speech levels
+
+    def get_elapsed_time(self):
+        """Get elapsed recording time in seconds"""
+        if self.start_time:
+            return time.time() - self.start_time
+        return 0.0
 
 
 class HoldToSpeakDaemon:
@@ -122,6 +138,47 @@ class HoldToSpeakDaemon:
         self.keyboard_devices = []
         self.notification_id = None  # Track notification for in-place updates
         self.platform = get_platform_info()  # Detect platform and available tools
+        self._meter_thread = None  # Audio meter display thread
+        self._stop_meter = False  # Flag to stop meter thread
+
+    def _display_audio_meter(self):
+        """Display real-time audio level meter in terminal"""
+        while not self._stop_meter and self.recorder.is_recording:
+            level = self.recorder.current_level
+            elapsed = self.recorder.get_elapsed_time()
+
+            # Build the meter bar
+            filled = int(level * METER_WIDTH)
+            empty = METER_WIDTH - filled
+            bar = '█' * filled + '░' * empty
+
+            # Format elapsed time
+            time_str = f"{elapsed:.1f}s"
+
+            # Print meter with carriage return (overwrite line)
+            sys.stdout.write(f"\r🎤 Recording... {bar} [{time_str}]  ")
+            sys.stdout.flush()
+
+            time.sleep(1.0 / METER_UPDATE_RATE)
+
+        # Clear the meter line when done
+        sys.stdout.write("\r" + " " * 60 + "\r")
+        sys.stdout.flush()
+
+    def _start_audio_meter(self):
+        """Start the audio meter display thread"""
+        if not SHOW_AUDIO_METER:
+            return
+        self._stop_meter = False
+        self._meter_thread = threading.Thread(target=self._display_audio_meter, daemon=True)
+        self._meter_thread.start()
+
+    def _stop_audio_meter(self):
+        """Stop the audio meter display thread"""
+        self._stop_meter = True
+        if self._meter_thread:
+            self._meter_thread.join(timeout=0.5)
+            self._meter_thread = None
 
     def ensure_whisper_server(self):
         """
@@ -287,14 +344,17 @@ class HoldToSpeakDaemon:
             return
 
         if event.value == 1:  # Key pressed
-            print("\n🎤 Recording... (hold F12)")
+            if not SHOW_AUDIO_METER:
+                print("\n🎤 Recording... (hold F12)")
             self.play_beep(sound_file=BEEP_START_SOUND, frequency=BEEP_START_FREQUENCY, duration=BEEP_DURATION)
             self.recorder.start()
+            self._start_audio_meter()  # Start the visual meter
             # Show notification with long timeout (will be replaced when done)
             self.show_notification('Voice Input', 'Recording...',
                                  icon='audio-input-microphone', timeout=60000)
 
         elif event.value == 0:  # Key released
+            self._stop_audio_meter()  # Stop the visual meter
             print("⏹️  Recording stopped")
             self.play_beep(sound_file=BEEP_STOP_SOUND, frequency=BEEP_STOP_FREQUENCY, duration=BEEP_DURATION)
 
