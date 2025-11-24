@@ -1,81 +1,103 @@
 # Handover - VoiceType
 
-**Last Updated:** 2025-11-24 (Session 33)
+**Last Updated:** 2025-11-24 (Session 34)
 **Current Status:** ✅ Production Ready - v2.0.0
 **Plugin Name:** `voicetype`
 **Repository:** https://github.com/aldervall/Voicetype
 
 ---
 
-## 🎯 Current Session (Session 33 - 2025-11-24)
+## 🎯 Current Session (Session 34 - 2025-11-24)
 
-### Mission: ADD REAL-TIME AUDIO LEVEL METER 🎤
+### Mission: CONFIGURABLE HOTKEY VIA CONFIG FILE 🔧
 
-**User Request:** "implement a function that can interact with the end user to show that it's actually listening on input. something graphical that makes the user know that it's actually working in the background"
+**User Request:** "make it easy for end users to actually change their input if they want to in a config file... f12 is the normal one but they can actually change it to whatever you want"
 
 **What We Did:**
-1. ✅ **Researched visual feedback options** - Analyzed codebase for integration points
-2. ✅ **Implemented terminal audio meter** - Real-time amplitude bar with elapsed time
-3. ✅ **Added RMS calculation** - In `_audio_callback()` for live level detection
-4. ✅ **Created display thread** - Non-blocking updates at 10Hz
-5. ✅ **Added configuration** - SHOW_AUDIO_METER, METER_WIDTH, METER_UPDATE_RATE
-6. ✅ **Committed and pushed** - `6bd4ca3`
+1. ✅ **Created config system** - `src/config.py` with TOML loading and key mapping
+2. ✅ **Added config template** - `config/config.toml.example`
+3. ✅ **Updated daemon** - Loads all settings from `~/.config/voicetype/config.toml`
+4. ✅ **Updated installer** - Creates config file, shows location at end
+5. ✅ **Updated documentation** - ADVANCED.md and CLAUDE.md with config instructions
+6. ✅ **Committed and pushed** - `b1e7f6f`
 
 ### Changes Made
 
-#### **1. Audio Level Meter Implementation**
+#### **1. Configuration System**
+
+**New File:** `src/config.py`
+- TOML config loader with fallback defaults
+- Key name mapping (F1-F24, Pause, PrintScreen, ScrollLock)
+- Functions: `load_config()`, `get_trigger_key_code()`, `get_trigger_key_name()`
+
+**New File:** `config/config.toml.example`
+- Complete template with all configurable options
+
+#### **2. Daemon Updates**
 
 **File:** `src/voice_holdtospeak.py`
+- Imports config module
+- All hardcoded values now loaded from config
+- Displays configured key on startup:
+  ```
+  Trigger key: F12
+  Config: /home/username/.config/voicetype/config.toml
+  ```
 
-New configuration options:
-```python
-SHOW_AUDIO_METER = True   # Enable/disable meter
-METER_WIDTH = 20          # Width of bar
-METER_UPDATE_RATE = 10    # Updates per second
+#### **3. Installer Updates**
+
+**File:** `scripts/install.sh`
+- Added config file creation step
+- Creates `~/.config/voicetype/config.toml` with defaults
+- Shows config location prominently at end of installation
+
+#### **4. Documentation Updates**
+
+**File:** `docs/ADVANCED.md`
+- Complete rewrite of "Customization" section
+- New "Configuration File" and "All Configuration Options" sections
+- Simplified beep and notification configuration
+
+**File:** `CLAUDE.md`
+- Added config.py to core modules
+- Updated "Key Configuration" section
+- Added config file to generated files list
+
+### User Experience
+
+**End of installation shows:**
+```
+📁 Configuration file: ~/.config/voicetype/config.toml
+   Edit to change trigger key (F1-F24, Pause, PrintScreen, ScrollLock)
+   Restart daemon after changes: systemctl --user restart voicetype-daemon
 ```
 
-New methods in `StreamingRecorder`:
-- `current_level` attribute - Stores 0-1 normalized audio level
-- `get_elapsed_time()` - Returns recording duration
-- RMS calculation in `_audio_callback()`
-
-New methods in `HoldToSpeakDaemon`:
-- `_display_audio_meter()` - Renders bar with carriage return
-- `_start_audio_meter()` - Spawns display thread
-- `_stop_audio_meter()` - Cleanly terminates thread
-
-Visual output:
-```
-🎤 Recording... ████████░░░░░░░░░░░░ [2.3s]
-```
-
-### Key Discovery ⚠️
-
-**The audio meter only works when running daemon directly in terminal:**
+**To change hotkey:**
 ```bash
-voicetype-daemon  # ✅ Shows meter
+nano ~/.config/voicetype/config.toml
+# Change trigger_key = "F12" to trigger_key = "F11"
+systemctl --user restart voicetype-daemon
 ```
-
-**Does NOT work via systemd:**
-```bash
-systemctl --user start voicetype-daemon  # ❌ No visible meter
-journalctl --user -u voicetype-daemon -f  # Logs only, no \r support
-```
-
-**Why:** Carriage return (`\r`) updates work in interactive terminals but not in journalctl log output.
-
-### Open Issue
-
-Need alternative feedback for systemd service mode. Options discussed:
-- Enhanced desktop notifications with duration
-- Separate `voicetype-monitor` script
-- System tray indicator
 
 ### Commit Information
-- **Commit:** `6bd4ca3`
-- **Message:** "feat: Add real-time audio level meter to daemon mode"
+- **Commit:** `b1e7f6f`
+- **Message:** "feat: Add configurable hotkey via TOML config file"
 - **Branch:** main
 - **Status:** ✅ Pushed to origin/main
+
+---
+
+## 🎯 Previous Session (Session 33 - 2025-11-24)
+
+### Mission: ADD REAL-TIME AUDIO LEVEL METER 🎤
+
+**What We Did:**
+- Implemented terminal audio meter with RMS calculation
+- Added SHOW_AUDIO_METER, METER_WIDTH, METER_UPDATE_RATE config
+- Visual output: `🎤 Recording... ████████░░░░░░░░░░░░ [2.3s]`
+- Note: Only works in terminal, not via systemd/journalctl
+
+**Commit:** `6bd4ca3`
 
 ---
 
