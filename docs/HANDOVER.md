@@ -1,13 +1,62 @@
 # Handover - VoiceType
 
-**Last Updated:** 2025-11-24 (Session 34)
-**Current Status:** ✅ Production Ready - v2.0.0
+**Last Updated:** 2025-11-24 (Session 35)
+**Current Status:** ✅ Production Ready - v1.4.0
 **Plugin Name:** `voicetype`
 **Repository:** https://github.com/aldervall/Voicetype
 
 ---
 
-## 🎯 Current Session (Session 34 - 2025-11-24)
+## 🎯 Current Session (Session 35 - 2025-11-24)
+
+### Mission: AUR PACKAGE FOR ARCH LINUX 📦
+
+**User Request:** "look up the possibility to implement this in the Arch package search like yay, paru"
+
+**What We Did:**
+1. ✅ **Researched AUR requirements** - Package types, dependencies, submission process
+2. ✅ **Created PKGBUILD** - `aur/PKGBUILD` with proper Arch package structure
+3. ✅ **Created post-install script** - `aur/voicetype.install` with setup instructions
+4. ✅ **Generated .SRCINFO** - `aur/.SRCINFO` with package metadata
+5. ✅ **Created submission guide** - `aur/README.md` with step-by-step AUR publishing
+6. ✅ **Updated README** - AUR installation now primary, Claude Code secondary (collapsible)
+7. ✅ **Committed and pushed** - `2c7d51e`
+
+### Changes Made
+
+#### **1. AUR Package Files**
+
+**New Directory:** `aur/`
+- `PKGBUILD` - Package build script for `voicetype-bin`
+- `.SRCINFO` - Package metadata
+- `voicetype.install` - Post-install/upgrade/remove messages
+- `README.md` - AUR submission guide
+
+**Key Decisions:**
+- Package name: `voicetype-bin` (uses pre-built binary)
+- Email: GitHub noreply (`aldervall@users.noreply.github.com`)
+- Model download on first use (keeps package small)
+- Dependencies mapped to Arch packages
+
+#### **2. README Update**
+
+**File:** `docs/README.md`
+- AUR installation now primary (visible by default)
+- Claude Code installation now secondary (collapsible `<details>`)
+- Arch users see `yay -S voicetype-bin` immediately
+
+### Next Steps for User
+
+1. Test locally: `cd aur && makepkg -si`
+2. Create AUR account at aur.archlinux.org
+3. Set up SSH key
+4. Push to AUR (see `aur/README.md`)
+
+**Estimated time:** 30-45 minutes
+
+---
+
+## 📜 Previous Session (Session 34 - 2025-11-24)
 
 ### Mission: CONFIGURABLE HOTKEY VIA CONFIG FILE 🔧
 
